@@ -1,0 +1,36 @@
+// module/user/init.go
+package user
+
+import (
+	"github.com/gin-gonic/gin"
+	"vidora-api/port"
+	"vidora-api/shared/mod"
+	"gorm.io/gorm"
+)
+
+// 确保实现接口
+var _ mod.Module = (*Module)(nil)
+var _ port.UserBiz = (*Service)(nil)
+
+// Module 用户模块
+type Module struct {
+	Service *Service
+	handler *Handler
+}
+
+// Init 初始化用户模块
+func Init(db *gorm.DB) *Module {
+	repo := NewRepository(db)
+	svc := NewService(repo)
+	h := NewHandler(svc)
+
+	return &Module{
+		Service: svc,
+		handler: h,
+	}
+}
+
+// RegisterRoutes 注册路由
+func (m *Module) RegisterRoutes(r *gin.RouterGroup) {
+	m.handler.Routes(r)
+}

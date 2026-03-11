@@ -1,0 +1,20 @@
+database:
+  host: 1Panel-mysql-TUuu
+  port: 3306
+  dbname: app_db
+  user: test
+  password: D7p6ZkcJRMynPfCy
+
+redis:
+  host: 1Panel-redis-dpZp
+  port: 6379
+  password: 32wB6ejWwb78cPKT
+  db: 0
+
+jwt:
+  secret: se123abc456
+  expire_time: 7200
+  refresh_expire_time: 604800 
+
+server:
+  port: 8080
