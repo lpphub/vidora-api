@@ -29,12 +29,15 @@ func (h *Handler) Routes(r *gin.RouterGroup) {
 
 // Create 创建转码任务
 func (h *Handler) Create(c *gin.Context) {
-	videoID, _ := strconv.ParseUint(c.Param("id"), 10, 64)
+	videoID, ok := helper.MustParseUintParam(c, "id")
+	if !ok {
+		return
+	}
 	var req CreateTranscodeReq
 	if !helper.MustBindJSON(c, &req) {
 		return
 	}
-	task, err := h.svc.Create(c, uint(videoID), req.InputURL, req.Resolution, req.Bitrate)
+	task, err := h.svc.Create(c, videoID, req.InputURL, req.Resolution, req.Bitrate)
 	helper.Respond(c, err, task)
 }
 
@@ -56,15 +59,21 @@ func (h *Handler) List(c *gin.Context) {
 
 // Get 获取转码任务
 func (h *Handler) Get(c *gin.Context) {
-	id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
-	task, err := h.svc.Get(c, uint(id))
+	id, ok := helper.MustParseUintParam(c, "id")
+	if !ok {
+		return
+	}
+	task, err := h.svc.Get(c, id)
 	helper.Respond(c, err, task)
 }
 
 // Retry 重试转码任务
 func (h *Handler) Retry(c *gin.Context) {
-	id, _ := strconv.ParseUint(c.Param("id"), 10, 64)
-	task, err := h.svc.Retry(c, uint(id))
+	id, ok := helper.MustParseUintParam(c, "id")
+	if !ok {
+		return
+	}
+	task, err := h.svc.Retry(c, id)
 	helper.Respond(c, err, task)
 }
 
