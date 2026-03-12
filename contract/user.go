@@ -1,5 +1,5 @@
 // contract/user.go
-package port
+package contract
 
 import "context"
 

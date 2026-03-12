@@ -6,12 +6,15 @@ import (
 	"errors"
 	"time"
 
-	"vidora-api/port"
+	"vidora-api/contract"
 	"vidora-api/shared/errs"
 	"vidora-api/shared/strutils"
 
 	"gorm.io/gorm"
 )
+
+// 确保实现 contract.UserBiz 接口
+var _ contract.UserBiz = (*Service)(nil)
 
 // Service 用户服务
 type Service struct {
@@ -24,7 +27,7 @@ func NewService(repo *Repository) *Service {
 }
 
 // Create 创建用户
-func (s *Service) Create(ctx context.Context, email, password string) (*port.UserDTO, error) {
+func (s *Service) Create(ctx context.Context, email, password string) (*contract.UserDTO, error) {
 	exists, _ := s.repo.ExistsByEmail(ctx, email)
 	if exists {
 		return nil, errs.ErrUserExists
@@ -49,7 +52,7 @@ func (s *Service) Create(ctx context.Context, email, password string) (*port.Use
 }
 
 // Get 获取用户
-func (s *Service) Get(ctx context.Context, userID uint) (*port.UserDTO, error) {
+func (s *Service) Get(ctx context.Context, userID uint) (*contract.UserDTO, error) {
 	user, err := s.repo.First(ctx, userID)
 	if err != nil {
 		return nil, err
@@ -58,7 +61,7 @@ func (s *Service) Get(ctx context.Context, userID uint) (*port.UserDTO, error) {
 }
 
 // GetByEmail 根据邮箱获取用户
-func (s *Service) GetByEmail(ctx context.Context, email string) (*port.UserDTO, error) {
+func (s *Service) GetByEmail(ctx context.Context, email string) (*contract.UserDTO, error) {
 	user, err := s.repo.GetByEmail(ctx, email)
 	if err != nil {
 		return nil, err
@@ -67,13 +70,13 @@ func (s *Service) GetByEmail(ctx context.Context, email string) (*port.UserDTO, 
 }
 
 // GetByIDs 批量获取用户
-func (s *Service) GetByIDs(ctx context.Context, ids []uint) ([]port.UserDTO, error) {
+func (s *Service) GetByIDs(ctx context.Context, ids []uint) ([]contract.UserDTO, error) {
 	users, err := s.repo.FindByIDs(ctx, ids)
 	if err != nil {
 		return nil, err
 	}
 
-	dtos := make([]port.UserDTO, len(users))
+	dtos := make([]contract.UserDTO, len(users))
 	for i, u := range users {
 		dtos[i] = *toDTO(&u)
 	}
@@ -81,7 +84,7 @@ func (s *Service) GetByIDs(ctx context.Context, ids []uint) ([]port.UserDTO, err
 }
 
 // ValidateLogin 验证登录
-func (s *Service) ValidateLogin(ctx context.Context, email, password string) (*port.UserDTO, error) {
+func (s *Service) ValidateLogin(ctx context.Context, email, password string) (*contract.UserDTO, error) {
 	user, err := s.repo.GetByEmail(ctx, email)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -139,8 +142,8 @@ func (s *Service) ChangePassword(ctx context.Context, userID uint, oldPassword, 
 }
 
 // toDTO 转换为 DTO
-func toDTO(user *User) *port.UserDTO {
-	return &port.UserDTO{
+func toDTO(user *User) *contract.UserDTO {
+	return &contract.UserDTO{
 		ID:       user.ID,
 		Email:    user.Email,
 		Name:     user.Name,

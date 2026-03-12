@@ -5,20 +5,23 @@ import (
 	"context"
 	"errors"
 
-	"vidora-api/port"
+	"vidora-api/contract"
 	"vidora-api/shared/errs"
 
 	"gorm.io/gorm"
 )
 
+// 确保实现 contract.VideoBiz 接口
+var _ contract.VideoBiz = (*Service)(nil)
+
 // Service 视频服务
 type Service struct {
 	repo   *Repository
-	tagSvc port.TagBiz
+	tagSvc contract.TagBiz
 }
 
 // NewService 创建视频服务
-func NewService(repo *Repository, tagSvc port.TagBiz) *Service {
+func NewService(repo *Repository, tagSvc contract.TagBiz) *Service {
 	return &Service{
 		repo:   repo,
 		tagSvc: tagSvc,
@@ -26,7 +29,7 @@ func NewService(repo *Repository, tagSvc port.TagBiz) *Service {
 }
 
 // Create 创建视频
-func (s *Service) Create(ctx context.Context, req port.CreateVideoReq) (*port.VideoDTO, error) {
+func (s *Service) Create(ctx context.Context, req contract.CreateVideoReq) (*contract.VideoDTO, error) {
 	// 验证分类和标签
 	ids := req.TagIDs
 	if req.CategoryID > 0 {
@@ -58,7 +61,7 @@ func (s *Service) Create(ctx context.Context, req port.CreateVideoReq) (*port.Vi
 }
 
 // Update 更新视频
-func (s *Service) Update(ctx context.Context, id uint, req port.UpdateVideoReq) (*port.VideoDTO, error) {
+func (s *Service) Update(ctx context.Context, id uint, req contract.UpdateVideoReq) (*contract.VideoDTO, error) {
 	if _, err := s.repo.First(ctx, id); err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errs.ErrVideoNotFound
@@ -114,7 +117,7 @@ func (s *Service) Delete(ctx context.Context, id uint) error {
 }
 
 // Get 获取视频
-func (s *Service) Get(ctx context.Context, id uint) (*port.VideoDTO, error) {
+func (s *Service) Get(ctx context.Context, id uint) (*contract.VideoDTO, error) {
 	video, err := s.repo.First(ctx, id)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, errs.ErrVideoNotFound
@@ -126,18 +129,18 @@ func (s *Service) Get(ctx context.Context, id uint) (*port.VideoDTO, error) {
 }
 
 // List 获取视频列表
-func (s *Service) List(ctx context.Context, req port.VideoListReq) (*port.VideoListDTO, error) {
+func (s *Service) List(ctx context.Context, req contract.VideoListReq) (*contract.VideoListDTO, error) {
 	videos, total, err := s.repo.ListWithFilter(ctx, req.CategoryID, req.Status, req.Keyword, req.Page, req.PageSize)
 	if err != nil {
 		return nil, err
 	}
 
-	dtos := make([]port.VideoDTO, len(videos))
+	dtos := make([]contract.VideoDTO, len(videos))
 	for i, v := range videos {
 		dtos[i] = *toDTO(&v)
 	}
 
-	return &port.VideoListDTO{Total: total, List: dtos}, nil
+	return &contract.VideoListDTO{Total: total, List: dtos}, nil
 }
 
 // GetEntity 获取视频实体
@@ -158,8 +161,8 @@ func (s *Service) ListEntity(ctx context.Context, req VideoListReq) (*VideoListR
 	return &VideoListResp{Total: total, List: videos}, nil
 }
 
-func toDTO(video *Video) *port.VideoDTO {
-	return &port.VideoDTO{
+func toDTO(video *Video) *contract.VideoDTO {
+	return &contract.VideoDTO{
 		ID:          video.ID,
 		Title:       video.Title,
 		Description: video.Description,

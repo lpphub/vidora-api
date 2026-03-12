@@ -5,17 +5,17 @@ import (
 	"context"
 
 	"github.com/jinzhu/copier"
-	"vidora-api/port"
+	"vidora-api/contract"
 	"vidora-api/infra/jwt"
 )
 
 // Service 认证服务
 type Service struct {
-	userSvc port.UserBiz
+	userSvc contract.UserBiz
 }
 
 // NewService 创建认证服务
-func NewService(userSvc port.UserBiz) *Service {
+func NewService(userSvc contract.UserBiz) *Service {
 	return &Service{userSvc: userSvc}
 }
 

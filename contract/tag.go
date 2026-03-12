@@ -1,5 +1,5 @@
-// port/tag.go
-package port
+// contract/tag.go
+package contract
 
 import "context"
 

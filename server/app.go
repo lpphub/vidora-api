@@ -76,7 +76,6 @@ func (a *App) initModules() []mod.Module {
 	videoMod := video.Init(infra.DB, tagMod.Service)
 	transcodeMod := transcode.Init(infra.DB)
 
-	// 按顺序返回
 	return []mod.Module{userMod, authMod, tagMod, videoMod, transcodeMod}
 }
 

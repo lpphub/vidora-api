@@ -1,5 +1,5 @@
 // contract/video.go
-package port
+package contract
 
 import "context"
 

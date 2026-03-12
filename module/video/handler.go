@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"vidora-api/port"
+	"vidora-api/contract"
 	"vidora-api/server/helper"
 )
 
@@ -35,7 +35,7 @@ func (h *Handler) Create(c *gin.Context) {
 		return
 	}
 
-	contractReq := port.CreateVideoReq{
+	contractReq := contract.CreateVideoReq{
 		Title:       req.Title,
 		Description: req.Description,
 		CoverURL:    req.CoverURL,
@@ -57,7 +57,7 @@ func (h *Handler) Update(c *gin.Context) {
 		return
 	}
 
-	contractReq := port.UpdateVideoReq{
+	contractReq := contract.UpdateVideoReq{
 		Title:       req.Title,
 		Description: req.Description,
 		CoverURL:    req.CoverURL,

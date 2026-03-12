@@ -5,10 +5,14 @@ import (
 	"context"
 	"errors"
 
+	"vidora-api/contract"
 	"vidora-api/shared/errs"
 
 	"gorm.io/gorm"
 )
+
+// 确保实现 contract.TagBiz 接口
+var _ contract.TagBiz = (*Service)(nil)
 
 // Service 标签服务
 type Service struct {
@@ -61,7 +65,7 @@ func (s *Service) List(ctx context.Context) ([]Tag, error) {
 	return s.repo.List(ctx)
 }
 
-// ExistByIDs 验证 ID 是否存在 - 实现 port.TagBiz 接口
+// ExistByIDs 验证 ID 是否存在 - 实现 contract.TagBiz 接口
 func (s *Service) ExistByIDs(ctx context.Context, ids []uint) error {
 	if len(ids) == 0 {
 		return nil
@@ -90,7 +94,7 @@ func (s *Service) GetVideoTags(ctx context.Context, videoID uint) ([]Tag, error)
 	return s.repo.GetVideoTags(ctx, videoID)
 }
 
-// SyncVideoTags 同步视频标签 - 实现 port.TagBiz 接口
+// SyncVideoTags 同步视频标签 - 实现 contract.TagBiz 接口
 func (s *Service) SyncVideoTags(ctx context.Context, videoID uint, tagIDs []uint) error {
 	return s.repo.SyncVideoTags(ctx, videoID, tagIDs)
 }

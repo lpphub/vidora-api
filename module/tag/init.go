@@ -3,14 +3,12 @@ package tag
 
 import (
 	"github.com/gin-gonic/gin"
-	"vidora-api/port"
-	"vidora-api/shared/mod"
 	"gorm.io/gorm"
+	"vidora-api/shared/mod"
 )
 
 // 确保实现接口
 var _ mod.Module = (*Module)(nil)
-var _ port.TagBiz = (*Service)(nil)
 
 // Module 标签模块
 type Module struct {

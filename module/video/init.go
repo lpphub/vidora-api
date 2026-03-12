@@ -3,14 +3,13 @@ package video
 
 import (
 	"github.com/gin-gonic/gin"
-	"vidora-api/port"
-	"vidora-api/shared/mod"
 	"gorm.io/gorm"
+	"vidora-api/contract"
+	"vidora-api/shared/mod"
 )
 
 // 确保实现接口
 var _ mod.Module = (*Module)(nil)
-var _ port.VideoBiz = (*Service)(nil)
 
 // Module 视频模块
 type Module struct {
@@ -19,7 +18,7 @@ type Module struct {
 }
 
 // Init 初始化视频模块
-func Init(db *gorm.DB, tagSvc port.TagBiz) *Module {
+func Init(db *gorm.DB, tagSvc contract.TagBiz) *Module {
 	repo := NewRepository(db)
 	svc := NewService(repo, tagSvc)
 	h := NewHandler(svc)
