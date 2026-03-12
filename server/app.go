@@ -10,6 +10,7 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+	"vidora-api/server/middleware"
 
 	"vidora-api/infra"
 	"vidora-api/module/auth"
@@ -53,8 +54,8 @@ func (a *App) setupRouter() {
 	r := a.engine
 
 	// 中间件
-	r.Use(gin.Recovery())
-	r.Use(logx.GinAccessLog(logx.WithSkipPaths("/metrics", "/health")))
+	r.Use(gin.Recovery(), logx.GinAccessLog(logx.WithSkipPaths("/metrics", "/health")))
+	r.Use(middleware.Cors())
 
 	// 系统路由
 	monitor.RegisterMetrics(r)
