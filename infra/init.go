@@ -14,7 +14,6 @@ var (
 	RDB *redis.Client
 )
 
-// Init 初始化基础设施
 func Init() error {
 	var err error
 

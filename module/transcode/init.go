@@ -3,8 +3,8 @@ package transcode
 
 import (
 	"github.com/gin-gonic/gin"
-	"vidora-api/shared/mod"
 	"gorm.io/gorm"
+	"vidora-api/shared/mod"
 )
 
 // 确保实现接口
@@ -16,8 +16,8 @@ type Module struct {
 	handler *Handler
 }
 
-// Init 初始化转码模块
-func Init(db *gorm.DB) *Module {
+// New 创建转码模块
+func New(db *gorm.DB) *Module {
 	repo := NewRepository(db)
 	svc := NewService(repo)
 	h := NewHandler(svc)

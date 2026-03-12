@@ -70,12 +70,11 @@ func (a *App) setupRouter() {
 }
 
 func (a *App) initModules() []mod.Module {
-	// 初始化所有模块
-	userMod := user.Init(infra.DB)
-	authMod := auth.Init(userMod.Service)
-	tagMod := tag.Init(infra.DB)
-	videoMod := video.Init(infra.DB, tagMod.Service)
-	transcodeMod := transcode.Init(infra.DB)
+	userMod := user.New(infra.DB)
+	authMod := auth.New(userMod.Service)
+	tagMod := tag.New(infra.DB)
+	videoMod := video.New(infra.DB, tagMod.Service)
+	transcodeMod := transcode.New(infra.DB)
 
 	return []mod.Module{userMod, authMod, tagMod, videoMod, transcodeMod}
 }

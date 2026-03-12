@@ -17,8 +17,8 @@ type Module struct {
 	handler *Handler
 }
 
-// Init 初始化视频模块
-func Init(db *gorm.DB, tagSvc contract.TagBiz) *Module {
+// New 创建视频模块
+func New(db *gorm.DB, tagSvc contract.TagBiz) *Module {
 	repo := NewRepository(db)
 	svc := NewService(repo, tagSvc)
 	h := NewHandler(svc)

@@ -17,8 +17,8 @@ type Module struct {
 	handler *Handler
 }
 
-// Init 初始化标签模块
-func Init(db *gorm.DB) *Module {
+// New 创建标签模块
+func New(db *gorm.DB) *Module {
 	repo := NewRepository(db)
 	svc := NewService(repo)
 	h := NewHandler(svc)

@@ -1,4 +1,3 @@
-// module/tag/model.go
 package tag
 
 import (
@@ -7,22 +6,27 @@ import (
 	"gorm.io/gorm"
 )
 
-// TagType 标签类型
 type TagType int8
+type TagStatus string
 
 const (
-	TypeNormal   TagType = 0 // 普通标签
-	TypeCategory TagType = 1 // 分类
+	TypeNormal   TagType = 0
+	TypeCategory TagType = 1
+
+	StatusEnabled  TagStatus = "enabled"
+	StatusDisabled TagStatus = "disabled"
 )
 
-// Tag 标签模型
 type Tag struct {
-	ID        uint           `gorm:"primaryKey" json:"id"`
-	Name      string         `gorm:"size:50;not null" json:"name"`
-	Type      TagType        `gorm:"default:0;index" json:"type"` // 0=普通标签, 1=分类
-	SortOrder int            `gorm:"default:0" json:"sortOrder"`  // 排序（仅分类使用）
-	CreatedAt time.Time      `json:"createdAt"`
-	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
+	ID         uint           `gorm:"primaryKey" json:"id"`
+	Name       string         `gorm:"size:50;not null;uniqueIndex" json:"name"`
+	Type       TagType        `gorm:"default:0;index" json:"type"`
+	Color      string         `gorm:"size:7" json:"color,omitempty"`
+	SortOrder  int            `gorm:"default:0" json:"sortOrder,omitempty"`
+	Status     TagStatus      `gorm:"size:10;default:'enabled'" json:"status,omitempty"`
+	UsageCount int            `gorm:"default:0" json:"usageCount"`
+	CreatedAt  time.Time      `json:"createdAt"`
+	DeletedAt  gorm.DeletedAt `gorm:"index" json:"-"`
 }
 
 // TableName 指定表名

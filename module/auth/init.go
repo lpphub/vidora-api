@@ -16,8 +16,8 @@ type Module struct {
 	handler *Handler
 }
 
-// Init 初始化认证模块
-func Init(userSvc contract.UserBiz) *Module {
+// New 创建认证模块
+func New(userSvc contract.UserBiz) *Module {
 	svc := NewService(userSvc)
 	h := NewHandler(svc)
 
