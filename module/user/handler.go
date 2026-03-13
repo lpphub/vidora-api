@@ -13,8 +13,5 @@ func NewHandler(svc *Service) *Handler {
 	return &Handler{svc: svc}
 }
 
-// Routes 注册路由
-func (h *Handler) Routes(r *gin.RouterGroup) {
-	// User 模块不直接暴露 HTTP 接口
-	// 用户相关操作通过 Auth 模块进行
+func (h *Handler) register(r *gin.RouterGroup) {
 }

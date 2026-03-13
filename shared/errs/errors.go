@@ -31,4 +31,11 @@ var (
 	ErrTagExists          = base.NewError(2206, "标签已存在")
 	ErrTranscodeNotFound  = base.NewError(2207, "转码任务不存在")
 	ErrTranscodeNotFailed = base.NewError(2208, "只有失败的任务可以重试")
+
+	ErrUploadSessionNotFound = base.NewError(2301, "上传会话不存在或已过期")
+	ErrChunksIncomplete      = base.NewError(2302, "分片不完整")
+	ErrChunkUploadFailed     = base.NewError(2303, "分片上传失败")
+
+	ErrObjectNotFound  = base.NewError(2401, "文件不存在")
+	ErrUnsupportedType = base.NewError(2402, "不支持的存储类型")
 )

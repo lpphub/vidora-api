@@ -3,6 +3,8 @@ package infra
 import (
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/lpphub/goweb/pkg/config"
+
+	"vidora-api/infra/storage"
 )
 
 type DBConfig struct {
@@ -35,6 +37,7 @@ type Config struct {
 	Redis    RedisConfig
 	JWT      JWTConfig
 	Server   ServerConfig
+	Storage  storage.Config
 }
 
 // LoadConfig 加载配置文件

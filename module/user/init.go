@@ -4,7 +4,7 @@ package user
 import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"vidora-api/shared/mod"
+	"vidora-api/server/core"
 )
 
 // 确保实现接口
@@ -28,7 +28,6 @@ func New(db *gorm.DB) *Module {
 	}
 }
 
-// RegisterRoutes 注册路由
-func (m *Module) RegisterRoutes(r *gin.RouterGroup) {
-	m.handler.Routes(r)
+func (m *Module) Routes(r *gin.RouterGroup) {
+	m.handler.register(r)
 }

@@ -18,7 +18,7 @@ import (
 	"vidora-api/module/transcode"
 	"vidora-api/module/user"
 	"vidora-api/module/video"
-	"vidora-api/shared/mod"
+	"vidora-api/server/core"
 
 	"github.com/gin-gonic/gin"
 	"github.com/lpphub/goweb/ext/logx"
@@ -65,7 +65,7 @@ func (a *App) setupRouter() {
 
 	// 业务路由 - 按依赖顺序注册
 	for _, m := range a.initModules() {
-		m.RegisterRoutes(r.Group(""))
+		m.Routes(r.Group(""))
 	}
 }
 
@@ -73,7 +73,7 @@ func (a *App) initModules() []mod.Module {
 	userMod := user.New(infra.DB)
 	authMod := auth.New(userMod.Service)
 	tagMod := tag.New(infra.DB)
-	videoMod := video.New(infra.DB, tagMod.Service)
+	videoMod := video.New(infra.DB, infra.RDB, tagMod.Service, infra.Storage)
 	transcodeMod := transcode.New(infra.DB)
 
 	return []mod.Module{userMod, authMod, tagMod, videoMod, transcodeMod}

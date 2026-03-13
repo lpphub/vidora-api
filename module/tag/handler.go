@@ -13,7 +13,7 @@ func NewHandler(svc *Service) *Handler {
 	return &Handler{svc: svc}
 }
 
-func (h *Handler) Routes(r *gin.RouterGroup) {
+func (h *Handler) register(r *gin.RouterGroup) {
 	r.POST("/tags", h.Create)
 	r.GET("/tags", h.List)
 	r.GET("/tags/:id", h.Get)

@@ -1,35 +1,35 @@
-// module/video/init.go
 package video
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
-	"vidora-api/contract"
-	"vidora-api/shared/mod"
+
+	"vidora-api/infra/storage"
+	"vidora-api/module/video/handler"
+	"vidora-api/module/video/repository"
+	"vidora-api/module/video/service"
+	"vidora-api/server/core"
 )
 
-// 确保实现接口
 var _ mod.Module = (*Module)(nil)
 
-// Module 视频模块
 type Module struct {
-	Service *Service
-	handler *Handler
+	UploadService *service.UploadService
+	uploadH       *handler.UploadHandler
 }
 
-// New 创建视频模块
-func New(db *gorm.DB, tagSvc contract.TagBiz) *Module {
-	repo := NewRepository(db)
-	svc := NewService(repo, tagSvc)
-	h := NewHandler(svc)
+func New(db *gorm.DB, rdb *redis.Client, _ interface{}, st storage.Client) *Module {
+	uploadRepo := repository.NewUploadRepository(db, rdb, st)
+	uploadSvc := service.NewUploadService(uploadRepo, st)
+	uploadH := handler.NewUploadHandler(uploadSvc)
 
 	return &Module{
-		Service: svc,
-		handler: h,
+		UploadService: uploadSvc,
+		uploadH:       uploadH,
 	}
 }
 
-// RegisterRoutes 注册路由
-func (m *Module) RegisterRoutes(r *gin.RouterGroup) {
-	m.handler.Routes(r)
+func (m *Module) Routes(r *gin.RouterGroup) {
+	m.uploadH.Register(r)
 }

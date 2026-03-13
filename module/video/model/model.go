@@ -1,5 +1,4 @@
-// module/video/model.go
-package video
+package model
 
 import (
 	"time"
@@ -7,7 +6,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// Video 视频模型
 type Video struct {
 	ID          uint           `gorm:"primaryKey" json:"id"`
 	Title       string         `gorm:"size:255;not null" json:"title"`
@@ -23,29 +21,35 @@ type Video struct {
 	DeletedAt   gorm.DeletedAt `gorm:"index" json:"-"`
 }
 
-// TableName 指定表名
 func (*Video) TableName() string {
 	return "videos"
 }
 
-// IsPublished 是否已发布
 func (v *Video) IsPublished() bool {
 	return v.Status == 1
 }
 
-// VideoOutput 视频输出
-type VideoOutput struct {
+type UploadFile struct {
 	ID         uint      `gorm:"primaryKey" json:"id"`
-	VideoID    uint      `gorm:"index" json:"videoId"`
-	Resolution string    `gorm:"size:20" json:"resolution"`
-	Bitrate    string    `gorm:"size:20" json:"bitrate"`
-	VideoURL   string    `gorm:"size:512" json:"videoUrl"`
-	FileSize   int64     `json:"fileSize"`
-	Status     int8      `json:"status"`
+	FileKey    string    `gorm:"uniqueIndex;size:64;not null" json:"fileKey"`
+	MD5        string    `gorm:"uniqueIndex;size:32;not null" json:"md5"`
+	FileName   string    `gorm:"size:255;not null" json:"fileName"`
+	FileSize   int64     `gorm:"not null" json:"fileSize"`
+	StorageURL string    `gorm:"size:512" json:"storageUrl"`
 	CreatedAt  time.Time `json:"createdAt"`
 }
 
-// TableName 指定表名
-func (*VideoOutput) TableName() string {
-	return "video_outputs"
+func (*UploadFile) TableName() string {
+	return "upload_files"
+}
+
+type UploadSession struct {
+	UploadID       string `json:"uploadId"`
+	MD5            string `json:"md5"`
+	FileName       string `json:"fileName"`
+	FileSize       int64  `json:"fileSize"`
+	TotalChunks    int    `json:"totalChunks"`
+	UploadedChunks []int  `json:"uploadedChunks"`
+	CreatedAt      int64  `json:"createdAt"`
+	UpdatedAt      int64  `json:"updatedAt"`
 }

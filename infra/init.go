@@ -6,12 +6,15 @@ import (
 	"github.com/lpphub/goweb/pkg/logging"
 	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
+
+	"vidora-api/infra/storage"
 )
 
 var (
-	Cfg *Config
-	DB  *gorm.DB
-	RDB *redis.Client
+	Cfg     *Config
+	DB      *gorm.DB
+	RDB     *redis.Client
+	Storage storage.Client
 )
 
 func Init() error {
@@ -31,6 +34,11 @@ func Init() error {
 	if err != nil {
 		return fmt.Errorf("failed to connect to redis: %w", err)
 	}
+
+	//Storage, err = storage.NewStorage(Cfg.Storage)
+	//if err != nil {
+	//	return fmt.Errorf("failed to init storage: %w", err)
+	//}
 
 	logging.Init()
 

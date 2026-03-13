@@ -17,8 +17,7 @@ func NewHandler(svc *Service) *Handler {
 	return &Handler{svc: svc}
 }
 
-// Routes 注册路由
-func (h *Handler) Routes(r *gin.RouterGroup) {
+func (h *Handler) register(r *gin.RouterGroup) {
 	r.POST("/auth/register", h.Register)
 	r.POST("/auth/login", h.Login)
 	r.POST("/auth/refresh", h.RefreshToken)

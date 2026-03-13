@@ -18,8 +18,7 @@ func NewHandler(svc *Service) *Handler {
 	return &Handler{svc: svc}
 }
 
-// Routes 注册路由
-func (h *Handler) Routes(r *gin.RouterGroup) {
+func (h *Handler) register(r *gin.RouterGroup) {
 	r.POST("/videos/:id/transcode", h.Create)
 	r.GET("/transcodes", h.List)
 	r.GET("/transcodes/:id", h.Get)
