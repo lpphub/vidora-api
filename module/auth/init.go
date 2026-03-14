@@ -2,13 +2,14 @@
 package auth
 
 import (
-	"github.com/gin-gonic/gin"
 	"vidora-api/contract"
 	"vidora-api/server/core"
+
+	"github.com/gin-gonic/gin"
 )
 
 // 确保实现接口
-var _ mod.Module = (*Module)(nil)
+var _ core.Module = (*Module)(nil)
 
 // Module 认证模块
 type Module struct {

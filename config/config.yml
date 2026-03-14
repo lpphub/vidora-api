@@ -28,12 +28,6 @@ storage:
     bucket: videos
     use_ssl: false
     public_host: http://localhost:9000
-  s3:
-    region: us-east-1
-    access_key: ""
-    secret_key: ""
-    bucket: ""
-    public_host: ""
   oss:
     endpoint: ""
     access_key: ""

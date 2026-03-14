@@ -12,7 +12,7 @@ import (
 	"vidora-api/server/core"
 )
 
-var _ mod.Module = (*Module)(nil)
+var _ core.Module = (*Module)(nil)
 
 type Module struct {
 	UploadService *service.UploadService

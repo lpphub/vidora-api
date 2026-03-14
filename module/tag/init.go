@@ -2,13 +2,14 @@
 package tag
 
 import (
+	"vidora-api/server/core"
+
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"vidora-api/server/core"
 )
 
 // 确保实现接口
-var _ mod.Module = (*Module)(nil)
+var _ core.Module = (*Module)(nil)
 
 // Module 标签模块
 type Module struct {

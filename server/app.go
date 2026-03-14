@@ -64,19 +64,22 @@ func (a *App) setupRouter() {
 	})
 
 	// 业务路由 - 按依赖顺序注册
-	for _, m := range a.initModules() {
+	for _, m := range a.registerModules() {
 		m.Routes(r.Group(""))
 	}
 }
 
-func (a *App) initModules() []mod.Module {
+func (a *App) registerModules() []core.Module {
+	registry := core.NewRegistry()
+
 	userMod := user.New(infra.DB)
 	authMod := auth.New(userMod.Service)
 	tagMod := tag.New(infra.DB)
 	videoMod := video.New(infra.DB, infra.RDB, tagMod.Service, infra.Storage)
 	transcodeMod := transcode.New(infra.DB)
 
-	return []mod.Module{userMod, authMod, tagMod, videoMod, transcodeMod}
+	registry.Register(userMod, authMod, tagMod, videoMod, transcodeMod)
+	return registry.Modules()
 }
 
 func (a *App) start() {
