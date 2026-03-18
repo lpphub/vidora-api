@@ -11,6 +11,7 @@ type Tag struct {
 	GroupID   uint           `gorm:"not null;default:0;index" json:"-"`
 	Name      string         `gorm:"size:50;not null;index:idx_group_name" json:"name"`
 	CreatedAt time.Time      `json:"createdAt"`
+	UpdatedAt time.Time      `json:"updatedAt"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
 }
 

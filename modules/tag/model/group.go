@@ -11,6 +11,7 @@ type TagGroup struct {
 	Name      string         `gorm:"size:50;not null" json:"name"`
 	SortOrder int            `gorm:"default:0" json:"sortOrder"`
 	CreatedAt time.Time      `json:"createdAt"`
+	UpdatedAt time.Time      `json:"updatedAt"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
 }
 
