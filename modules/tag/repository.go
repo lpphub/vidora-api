@@ -19,7 +19,13 @@ func NewRepository(db *gorm.DB) *Repository {
 
 func (r *Repository) List(ctx context.Context) ([]Tag, error) {
 	var tags []Tag
-	err := r.DB().WithContext(ctx).Order("name ASC").Find(&tags).Error
+	err := r.DB().WithContext(ctx).Order("created_at ASC").Find(&tags).Error
+	return tags, err
+}
+
+func (r *Repository) ListByGroup(ctx context.Context, groupID uint) ([]Tag, error) {
+	var tags []Tag
+	err := r.DB().WithContext(ctx).Where("group_id = ?", groupID).Order("created_at ASC").Find(&tags).Error
 	return tags, err
 }
 
@@ -29,9 +35,9 @@ func (r *Repository) ListByType(ctx context.Context, tagType TagType) ([]Tag, er
 	return tags, err
 }
 
-func (r *Repository) ExistsByName(ctx context.Context, name string) (bool, error) {
+func (r *Repository) ExistsByName(ctx context.Context, name string, groupID uint) (bool, error) {
 	var count int64
-	err := r.DB().WithContext(ctx).Model(&Tag{}).Where("name = ?", name).Count(&count).Error
+	err := r.DB().WithContext(ctx).Model(&Tag{}).Where("name = ? AND group_id = ?", name, groupID).Count(&count).Error
 	return count > 0, err
 }
 
@@ -71,4 +77,8 @@ func (r *Repository) GetUsageCount(ctx context.Context, tagID uint) (int64, erro
 	var count int64
 	err := r.DB().WithContext(ctx).Model(&VideoTag{}).Where("tag_id = ?", tagID).Count(&count).Error
 	return count, err
+}
+
+func (r *Repository) MoveToGroup(ctx context.Context, fromGroupID, toGroupID uint) error {
+	return r.DB().WithContext(ctx).Model(&Tag{}).Where("group_id = ?", fromGroupID).Update("group_id", toGroupID).Error
 }
