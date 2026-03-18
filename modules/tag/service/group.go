@@ -86,26 +86,22 @@ func (s *GroupService) Create(ctx context.Context, req GroupReq) (*TagGroupWithT
 	return &TagGroupWithTags{TagGroup: *group, TagList: []model.Tag{}}, nil
 }
 
-func (s *GroupService) Update(ctx context.Context, id uint, req GroupReq) (*TagGroupWithTags, error) {
+func (s *GroupService) Update(ctx context.Context, id uint, req GroupReq) error {
 	group, err := s.repo.First(ctx, id)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return nil, errs.ErrTagGroupNotFound
+		return errs.ErrTagGroupNotFound
 	}
 	if err != nil {
-		return nil, err
+		return err
 	}
 	if req.Name != group.Name {
 		exists, _ := s.repo.ExistsByName(ctx, req.Name)
 		if exists {
-			return nil, errs.ErrTagGroupExists
+			return errs.ErrTagGroupExists
 		}
-		if err := s.repo.Update(ctx, id, map[string]any{"name": req.Name}); err != nil {
-			return nil, err
-		}
-		group.Name = req.Name
+		return s.repo.Update(ctx, id, map[string]any{"name": req.Name})
 	}
-	tags, _ := s.tagRepo.ListByGroup(ctx, id)
-	return &TagGroupWithTags{TagGroup: *group, TagList: tags}, nil
+	return nil
 }
 
 func (s *GroupService) Delete(ctx context.Context, id uint) error {

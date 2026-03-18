@@ -53,8 +53,8 @@ func (h *Handler) UpdateTag(c *gin.Context) {
 	if !helper.MustBindJSON(c, &req) {
 		return
 	}
-	tag, err := h.svc.Update(c.Request.Context(), tagID, req)
-	helper.Respond(c, err, tag)
+	err := h.svc.Update(c.Request.Context(), tagID, req)
+	helper.Respond(c, err, nil)
 }
 
 func (h *Handler) DeleteTag(c *gin.Context) {

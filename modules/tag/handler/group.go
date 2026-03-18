@@ -38,8 +38,8 @@ func (h *GroupHandler) Update(c *gin.Context) {
 	if !helper.MustBindJSON(c, &req) {
 		return
 	}
-	group, err := h.svc.Update(c.Request.Context(), id, req)
-	helper.Respond(c, err, group)
+	err := h.svc.Update(c.Request.Context(), id, req)
+	helper.Respond(c, err, nil)
 }
 
 func (h *GroupHandler) Delete(c *gin.Context) {

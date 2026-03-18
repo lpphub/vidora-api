@@ -57,26 +57,23 @@ func (s *Service) GetByID(ctx context.Context, id uint) (*model.Tag, error) {
 	return tag, err
 }
 
-func (s *Service) Update(ctx context.Context, id uint, req TagReq) (*model.Tag, error) {
+func (s *Service) Update(ctx context.Context, id uint, req TagReq) error {
 	tag, err := s.repo.First(ctx, id)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return nil, errs.ErrTagNotFound
+		return errs.ErrTagNotFound
 	}
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	if req.Name != "" && req.Name != tag.Name {
 		exists, _ := s.repo.ExistsByName(ctx, req.Name, tag.GroupID)
 		if exists {
-			return nil, errs.ErrTagExists
+			return errs.ErrTagExists
 		}
-		if err := s.repo.Update(ctx, id, map[string]any{"name": req.Name}); err != nil {
-			return nil, err
-		}
-		tag.Name = req.Name
+		return s.repo.Update(ctx, id, map[string]any{"name": req.Name})
 	}
-	return tag, nil
+	return nil
 }
 
 func (s *Service) Delete(ctx context.Context, id uint) error {
