@@ -41,13 +41,11 @@ func (s *GroupService) List(ctx context.Context) ([]TagGroupWithTags, error) {
 		return nil, err
 	}
 
-	groupIDs := make([]uint, len(groups)+1)
-	groupIDs[0] = DefaultGroupID
-	for i, g := range groups {
-		groupIDs[i+1] = g.ID
+	allTags, err := s.tagRepo.ListAll(ctx)
+	if err != nil {
+		return nil, err
 	}
 
-	allTags, _ := s.tagRepo.ListByGroupIDs(ctx, groupIDs)
 	tagMap := make(map[uint][]model.Tag)
 	for _, t := range allTags {
 		tagMap[t.GroupID] = append(tagMap[t.GroupID], t)
