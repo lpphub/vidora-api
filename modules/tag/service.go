@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"vidora-api/contract"
+	"vidora-api/modules/core/contract"
 	"vidora-api/shared/errs"
 
 	"gorm.io/gorm"
@@ -22,6 +22,7 @@ func NewService(repo *Repository) *Service {
 
 type CreateTagReq struct {
 	Name      string    `json:"name" binding:"required,max=50"`
+	GroupID   uint      `json:"groupId"`
 	Type      TagType   `json:"type"`
 	Color     string    `json:"color"`
 	SortOrder int       `json:"sortOrder"`
@@ -36,7 +37,7 @@ type UpdateTagReq struct {
 }
 
 func (s *Service) Create(ctx context.Context, req CreateTagReq) (*Tag, error) {
-	exists, _ := s.repo.ExistsByName(ctx, req.Name)
+	exists, _ := s.repo.ExistsByName(ctx, req.Name, req.GroupID)
 	if exists {
 		if req.Type == TypeCategory {
 			return nil, errs.ErrCategoryExists
@@ -51,6 +52,7 @@ func (s *Service) Create(ctx context.Context, req CreateTagReq) (*Tag, error) {
 
 	tag := &Tag{
 		Name:      req.Name,
+		GroupID:   req.GroupID,
 		Type:      req.Type,
 		Color:     req.Color,
 		SortOrder: req.SortOrder,
@@ -110,7 +112,7 @@ func (s *Service) Update(ctx context.Context, id uint, req UpdateTagReq) (*Tag, 
 
 	updates := make(map[string]any)
 	if req.Name != "" && req.Name != tag.Name {
-		exists, _ := s.repo.ExistsByName(ctx, req.Name)
+		exists, _ := s.repo.ExistsByName(ctx, req.Name, tag.GroupID)
 		if exists {
 			return nil, errs.ErrTagExists
 		}

@@ -38,4 +38,8 @@ var (
 
 	ErrObjectNotFound  = base.NewError(2401, "文件不存在")
 	ErrUnsupportedType = base.NewError(2402, "不支持的存储类型")
+
+	ErrTagGroupNotFound         = base.NewError(2209, "标签组不存在")
+	ErrTagGroupExists           = base.NewError(2210, "标签组已存在")
+	ErrCannotDeleteDefaultGroup = base.NewError(2211, "不能删除默认标签组")
 )
