@@ -198,7 +198,7 @@ type UserDTO struct {
 
 2. 模块 B 的 Service 实现接口：
 ```go
-// module/user/service.go
+// modules/user/service.go
 var _ contract.UserService = (*Service)(nil)
 
 func (s *Service) Get(ctx context.Context, id uint) (*contract.UserDTO, error) {
@@ -208,7 +208,7 @@ func (s *Service) Get(ctx context.Context, id uint) (*contract.UserDTO, error) {
 
 3. 模块 A 通过接口注入依赖：
 ```go
-// module/video/module.go
+// modules/video/modules.go
 func NewModule(
     db *gorm.DB,
     userSvc contract.UserService,  // 接口类型

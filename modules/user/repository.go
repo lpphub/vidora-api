@@ -1,4 +1,4 @@
-// module/user/repository.go
+// modules/user/repository.go
 package user
 
 import (

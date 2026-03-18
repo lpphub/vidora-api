@@ -1,4 +1,4 @@
-// module/user/service.go
+// modules/user/service.go
 package user
 
 import (
@@ -6,7 +6,7 @@ import (
 	"errors"
 	"time"
 
-	"vidora-api/contract"
+	"vidora-api/modules/core/contract"
 	"vidora-api/shared/errs"
 	"vidora-api/shared/strutils"
 

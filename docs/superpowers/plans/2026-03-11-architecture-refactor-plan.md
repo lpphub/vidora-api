@@ -379,7 +379,7 @@ Expected: 无错误
 - [ ] **Step 1: 创建 module/user/entity.go**
 
 ```go
-// module/user/entity.go
+// modules/user/entity.go
 package user
 
 import (
@@ -413,7 +413,7 @@ func (User) TableName() string {
 - [ ] **Step 2: 创建 module/user/dto.go**
 
 ```go
-// module/user/dto.go
+// modules/user/dto.go
 package user
 
 // 内部使用的 DTO（handler 层请求/响应）
@@ -443,7 +443,7 @@ type Resp struct {
 - [ ] **Step 3: 创建 module/user/errors.go**
 
 ```go
-// module/user/errors.go
+// modules/user/errors.go
 package user
 
 import "errors"
@@ -458,7 +458,7 @@ var (
 - [ ] **Step 4: 删除旧的 domain 目录**
 
 ```bash
-rm -rf module/user/domain/
+rm -rf modules/user/domain/
 ```
 
 - [ ] **Step 5: 验证编译**
@@ -477,7 +477,7 @@ Expected: 可能提示缺少其他文件，entity/dto/errors 部分无错误
 - [ ] **Step 1: 创建 module/user/repository.go**
 
 ```go
-// module/user/repository.go
+// modules/user/repository.go
 package user
 
 import (
@@ -537,7 +537,7 @@ func (r *Repository) Update(ctx context.Context, user *User) error {
 - [ ] **Step 2: 删除旧的 repository 目录**
 
 ```bash
-rm -rf module/user/repository/
+rm -rf modules/user/repository/
 ```
 
 ---
@@ -551,7 +551,7 @@ rm -rf module/user/repository/
 - [ ] **Step 1: 创建 module/user/service.go**
 
 ```go
-// module/user/service.go
+// modules/user/service.go
 package user
 
 import (
@@ -675,7 +675,7 @@ func toDTO(user *User) *contract.UserDTO {
 - [ ] **Step 2: 删除旧的 service 目录**
 
 ```bash
-rm -rf module/user/service/
+rm -rf modules/user/service/
 ```
 
 ---
@@ -689,7 +689,7 @@ rm -rf module/user/service/
 - [ ] **Step 1: 创建 module/user/handler.go**
 
 ```go
-// module/user/handler.go
+// modules/user/handler.go
 package user
 
 import (
@@ -717,7 +717,7 @@ func (h *Handler) Routes(r *gin.RouterGroup) {
 - [ ] **Step 2: 删除旧的 handler 目录**
 
 ```bash
-rm -rf module/user/handler/
+rm -rf modules/user/handler/
 ```
 
 ---
@@ -732,7 +732,7 @@ rm -rf module/user/handler/
 - [ ] **Step 1: 创建 module/user/module.go**
 
 ```go
-// module/user/module.go
+// modules/user/modules.go
 package user
 
 import (
@@ -767,7 +767,7 @@ func (m *Module) Routes(r *gin.RouterGroup) {
 - [ ] **Step 2: 创建 module/user/wire.go**
 
 ```go
-// module/user/wire.go
+// modules/user/wire.go
 package user
 
 import "github.com/google/wire"
@@ -814,7 +814,7 @@ Run: `find module/category -name "*.go" -exec cat {} \;`
 - [ ] **Step 2: 创建 module/category/entity.go**
 
 ```go
-// module/category/entity.go
+// modules/category/entity.go
 package category
 
 import (
@@ -847,7 +847,7 @@ func (Category) TableName() string {
 - [ ] **Step 3: 创建 module/category/dto.go**
 
 ```go
-// module/category/dto.go
+// modules/category/dto.go
 package category
 
 type CreateReq struct {
@@ -870,7 +870,7 @@ type Resp struct {
 - [ ] **Step 4: 创建 module/category/errors.go**
 
 ```go
-// module/category/errors.go
+// modules/category/errors.go
 package category
 
 import "errors"
@@ -883,7 +883,7 @@ var (
 - [ ] **Step 5: 创建 module/category/repository.go**
 
 ```go
-// module/category/repository.go
+// modules/category/repository.go
 package category
 
 import (
@@ -938,7 +938,7 @@ func (r *Repository) Delete(ctx context.Context, id uint) error {
 - [ ] **Step 6: 创建 module/category/service.go**
 
 ```go
-// module/category/service.go
+// modules/category/service.go
 package category
 
 import (
@@ -1043,7 +1043,7 @@ func toResp(cat *Category) *Resp {
 - [ ] **Step 7: 创建 module/category/handler.go**
 
 ```go
-// module/category/handler.go
+// modules/category/handler.go
 package category
 
 import (
@@ -1114,7 +1114,7 @@ func (h *Handler) Delete(c *gin.Context) {
 - [ ] **Step 8: 创建 module/category/module.go**
 
 ```go
-// module/category/module.go
+// modules/category/modules.go
 package category
 
 import (
@@ -1149,7 +1149,7 @@ func (m *Module) Routes(r *gin.RouterGroup) {
 - [ ] **Step 9: 创建 module/category/wire.go**
 
 ```go
-// module/category/wire.go
+// modules/category/wire.go
 package category
 
 import "github.com/google/wire"
@@ -1166,11 +1166,11 @@ var ProviderSet = wire.NewSet(
 - [ ] **Step 10: 删除旧目录**
 
 ```bash
-rm -rf module/category/domain/
-rm -rf module/category/repository/
-rm -rf module/category/service/
-rm -rf module/category/handler/
-rm -f module/category/module.go
+rm -rf modules/category/domain/
+rm -rf modules/category/repository/
+rm -rf modules/category/service/
+rm -rf modules/category/handler/
+rm -f modules/category/modules.go
 ```
 
 - [ ] **Step 11: 验证编译**
@@ -1200,7 +1200,7 @@ Run: `find module/tag -name "*.go" -exec cat {} \;`
 - [ ] **Step 2: 创建 module/tag/entity.go**
 
 ```go
-// module/tag/entity.go
+// modules/tag/entity.go
 package tag
 
 import (
@@ -1242,7 +1242,7 @@ func (VideoTag) TableName() string {
 - [ ] **Step 3: 创建 module/tag/dto.go**
 
 ```go
-// module/tag/dto.go
+// modules/tag/dto.go
 package tag
 
 type CreateReq struct {
@@ -1258,7 +1258,7 @@ type Resp struct {
 - [ ] **Step 4: 创建 module/tag/errors.go**
 
 ```go
-// module/tag/errors.go
+// modules/tag/errors.go
 package tag
 
 import "errors"
@@ -1272,7 +1272,7 @@ var (
 - [ ] **Step 5: 创建 module/tag/repository.go**
 
 ```go
-// module/tag/repository.go
+// modules/tag/repository.go
 package tag
 
 import (
@@ -1357,7 +1357,7 @@ func (r *Repository) Delete(ctx context.Context, id uint) error {
 - [ ] **Step 6: 创建 module/tag/service.go**
 
 ```go
-// module/tag/service.go
+// modules/tag/service.go
 package tag
 
 import (
@@ -1443,7 +1443,7 @@ func toResp(tag *Tag) *Resp {
 - [ ] **Step 7: 创建 module/tag/handler.go**
 
 ```go
-// module/tag/handler.go
+// modules/tag/handler.go
 package tag
 
 import (
@@ -1502,7 +1502,7 @@ func (h *Handler) Delete(c *gin.Context) {
 - [ ] **Step 8: 创建 module/tag/module.go**
 
 ```go
-// module/tag/module.go
+// modules/tag/modules.go
 package tag
 
 import (
@@ -1539,7 +1539,7 @@ func (m *Module) Routes(r *gin.RouterGroup) {
 - [ ] **Step 9: 创建 module/tag/wire.go**
 
 ```go
-// module/tag/wire.go
+// modules/tag/wire.go
 package tag
 
 import "github.com/google/wire"
@@ -1556,11 +1556,11 @@ var ProviderSet = wire.NewSet(
 - [ ] **Step 10: 删除旧目录**
 
 ```bash
-rm -rf module/tag/domain/
-rm -rf module/tag/repository/
-rm -rf module/tag/service/
-rm -rf module/tag/handler/
-rm -f module/tag/module.go
+rm -rf modules/tag/domain/
+rm -rf modules/tag/repository/
+rm -rf modules/tag/service/
+rm -rf modules/tag/handler/
+rm -f modules/tag/modules.go
 ```
 
 - [ ] **Step 11: 验证编译**
@@ -1592,7 +1592,7 @@ Run: `find module/video -name "*.go" -exec cat {} \;`
 - [ ] **Step 2: 创建 module/video/entity.go**
 
 ```go
-// module/video/entity.go
+// modules/video/entity.go
 package video
 
 import (
@@ -1641,7 +1641,7 @@ func (v *Video) IsPublished() bool {
 - [ ] **Step 3: 创建 module/video/dto.go**
 
 ```go
-// module/video/dto.go
+// modules/video/dto.go
 package video
 
 type CreateReq struct {
@@ -1694,7 +1694,7 @@ type ListResp struct {
 - [ ] **Step 4: 创建 module/video/errors.go**
 
 ```go
-// module/video/errors.go
+// modules/video/errors.go
 package video
 
 import "errors"
@@ -1708,7 +1708,7 @@ var (
 - [ ] **Step 5: 创建 module/video/repository.go**
 
 ```go
-// module/video/repository.go
+// modules/video/repository.go
 package video
 
 import (
@@ -1809,7 +1809,7 @@ func (r *Repository) IncrementPlayCount(ctx context.Context, id uint) error {
 - [ ] **Step 6: 创建 module/video/service.go**
 
 ```go
-// module/video/service.go
+// modules/video/service.go
 package video
 
 import (
@@ -2008,7 +2008,7 @@ func toDTO(video *Video) *contract.VideoDTO {
 - [ ] **Step 7: 创建 module/video/handler.go**
 
 ```go
-// module/video/handler.go
+// modules/video/handler.go
 package video
 
 import (
@@ -2121,7 +2121,7 @@ func (h *Handler) Delete(c *gin.Context) {
 - [ ] **Step 8: 创建 module/video/module.go**
 
 ```go
-// module/video/module.go
+// modules/video/modules.go
 package video
 
 import (
@@ -2162,7 +2162,7 @@ func (m *Module) Routes(r *gin.RouterGroup) {
 - [ ] **Step 9: 创建 module/video/wire.go**
 
 ```go
-// module/video/wire.go
+// modules/video/wire.go
 package video
 
 import "github.com/google/wire"
@@ -2179,11 +2179,11 @@ var ProviderSet = wire.NewSet(
 - [ ] **Step 10: 删除旧目录**
 
 ```bash
-rm -rf module/video/domain/
-rm -rf module/video/repository/
-rm -rf module/video/service/
-rm -rf module/video/handler/
-rm -f module/video/module.go
+rm -rf modules/video/domain/
+rm -rf modules/video/repository/
+rm -rf modules/video/service/
+rm -rf modules/video/handler/
+rm -f modules/video/modules.go
 ```
 
 - [ ] **Step 11: 验证编译**
@@ -2224,7 +2224,7 @@ Expected: 无错误
 - [ ] **Step 1: 创建 module/wire.go**
 
 ```go
-// module/wire.go
+// modules/wire.go
 package module
 
 import (

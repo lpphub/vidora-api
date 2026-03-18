@@ -1,15 +1,16 @@
 package video
 
 import (
+	"vidora-api/modules/core"
+
 	"github.com/gin-gonic/gin"
 	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
 
 	"vidora-api/infra/storage"
-	"vidora-api/module/video/handler"
-	"vidora-api/module/video/repository"
-	"vidora-api/module/video/service"
-	"vidora-api/server/core"
+	"vidora-api/modules/video/handler"
+	"vidora-api/modules/video/repository"
+	"vidora-api/modules/video/service"
 )
 
 var _ core.Module = (*Module)(nil)

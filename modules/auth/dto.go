@@ -1,4 +1,4 @@
-// module/auth/dto.go
+// modules/auth/dto.go
 package auth
 
 // AuthReq 认证请求

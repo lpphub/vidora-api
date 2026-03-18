@@ -3,8 +3,8 @@ package handler
 import (
 	"github.com/gin-gonic/gin"
 
-	"vidora-api/module/video/model"
-	"vidora-api/module/video/service"
+	"vidora-api/modules/video/model"
+	"vidora-api/modules/video/service"
 	"vidora-api/server/helper"
 )
 

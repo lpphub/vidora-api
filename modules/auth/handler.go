@@ -1,4 +1,4 @@
-// module/auth/handler.go
+// modules/auth/handler.go
 package auth
 
 import (

@@ -1,9 +1,9 @@
-// module/auth/init.go
+// modules/auth/init.go
 package auth
 
 import (
-	"vidora-api/contract"
-	"vidora-api/server/core"
+	"vidora-api/modules/core"
+	"vidora-api/modules/core/contract"
 
 	"github.com/gin-gonic/gin"
 )

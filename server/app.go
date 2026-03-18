@@ -10,15 +10,14 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+	"vidora-api/modules/core"
 	"vidora-api/server/middleware"
 
 	"vidora-api/infra"
-	"vidora-api/module/auth"
-	"vidora-api/module/tag"
-	"vidora-api/module/transcode"
-	"vidora-api/module/user"
-	"vidora-api/module/video"
-	"vidora-api/server/core"
+	"vidora-api/modules/auth"
+	"vidora-api/modules/tag"
+	"vidora-api/modules/user"
+	"vidora-api/modules/video"
 
 	"github.com/gin-gonic/gin"
 	"github.com/lpphub/goweb/ext/logx"
@@ -70,16 +69,12 @@ func (a *App) setupRouter() {
 }
 
 func (a *App) registerModules() []core.Module {
-	registry := core.NewRegistry()
-
 	userMod := user.New(infra.DB)
 	authMod := auth.New(userMod.Service)
 	tagMod := tag.New(infra.DB)
 	videoMod := video.New(infra.DB, infra.RDB, tagMod.Service, infra.Storage)
-	transcodeMod := transcode.New(infra.DB)
 
-	registry.Register(userMod, authMod, tagMod, videoMod, transcodeMod)
-	return registry.Modules()
+	return []core.Module{userMod, authMod, tagMod, videoMod}
 }
 
 func (a *App) start() {

@@ -1,8 +1,8 @@
-// module/user/init.go
+// modules/user/init.go
 package user
 
 import (
-	"vidora-api/server/core"
+	"vidora-api/modules/core"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

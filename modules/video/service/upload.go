@@ -9,8 +9,8 @@ import (
 	"gorm.io/gorm"
 
 	"vidora-api/infra/storage"
-	"vidora-api/module/video/model"
-	"vidora-api/module/video/repository"
+	"vidora-api/modules/video/model"
+	"vidora-api/modules/video/repository"
 	"vidora-api/shared/errs"
 )
 

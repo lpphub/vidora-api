@@ -279,7 +279,7 @@ git commit -m "feat(core): add shared domain concepts"
 - [ ] **Step 1: 创建模块目录**
 
 ```bash
-mkdir -p module/category/{domain,port,repository,service,handler}
+mkdir -p modules/category/{domain,port,repository,service,handler}
 ```
 
 ---
@@ -293,7 +293,7 @@ mkdir -p module/category/{domain,port,repository,service,handler}
 - [ ] **Step 1: 编写 Category 实体**
 
 ```go
-// module/category/domain/category.go
+// modules/category/domain/category.go
 package domain
 
 import (
@@ -321,7 +321,7 @@ func (*Category) TableName() string {
 - [ ] **Step 2: 编写错误定义**
 
 ```go
-// module/category/domain/errors.go
+// modules/category/domain/errors.go
 package domain
 
 import "errors"
@@ -335,13 +335,13 @@ var (
 - [ ] **Step 3: 验证编译**
 
 ```bash
-cd /home/lsk/projects/vidora/vidora-api && go build ./module/category/...
+cd /home/lsk/projects/vidora/vidora-api && go build ./modules/category/...
 ```
 
 - [ ] **Step 4: 提交**
 
 ```bash
-git add module/category/domain/
+git add modules/category/domain/
 git commit -m "feat(module/category): add domain layer"
 ```
 
@@ -356,7 +356,7 @@ git commit -m "feat(module/category): add domain layer"
 - [ ] **Step 1: 编写 Repository 接口**
 
 ```go
-// module/category/port/repository.go
+// modules/category/port/repository.go
 package port
 
 import (
@@ -380,7 +380,7 @@ type Repository interface {
 - [ ] **Step 2: 编写 Service 接口**
 
 ```go
-// module/category/port/service.go
+// modules/category/port/service.go
 package port
 
 import (
@@ -402,13 +402,13 @@ type Service interface {
 - [ ] **Step 3: 验证编译**
 
 ```bash
-cd /home/lsk/projects/vidora/vidora-api && go build ./module/category/...
+cd /home/lsk/projects/vidora/vidora-api && go build ./modules/category/...
 ```
 
 - [ ] **Step 4: 提交**
 
 ```bash
-git add module/category/port/
+git add modules/category/port/
 git commit -m "feat(module/category): add port layer interfaces"
 ```
 
@@ -422,7 +422,7 @@ git commit -m "feat(module/category): add port layer interfaces"
 - [ ] **Step 1: 编写 Repository 实现**
 
 ```go
-// module/category/repository/category_repo.go
+// modules/category/repository/category_repo.go
 package repository
 
 import (
@@ -490,13 +490,13 @@ func (r *Repo) ListWithVideoCount(ctx context.Context) ([]domain.Category, map[u
 - [ ] **Step 2: 验证编译**
 
 ```bash
-cd /home/lsk/projects/vidora/vidora-api && go build ./module/category/...
+cd /home/lsk/projects/vidora/vidora-api && go build ./modules/category/...
 ```
 
 - [ ] **Step 3: 提交**
 
 ```bash
-git add module/category/repository/
+git add modules/category/repository/
 git commit -m "feat(module/category): add repository implementation"
 ```
 
@@ -510,7 +510,7 @@ git commit -m "feat(module/category): add repository implementation"
 - [ ] **Step 1: 编写 Service 实现**
 
 ```go
-// module/category/service/category_service.go
+// modules/category/service/category_service.go
 package service
 
 import (
@@ -596,13 +596,13 @@ func (s *CategoryService) ListWithVideoCount(ctx context.Context) ([]domain.Cate
 - [ ] **Step 2: 验证编译**
 
 ```bash
-cd /home/lsk/projects/vidora/vidora-api && go build ./module/category/...
+cd /home/lsk/projects/vidora/vidora-api && go build ./modules/category/...
 ```
 
 - [ ] **Step 3: 提交**
 
 ```bash
-git add module/category/service/
+git add modules/category/service/
 git commit -m "feat(module/category): add service implementation"
 ```
 
@@ -617,7 +617,7 @@ git commit -m "feat(module/category): add service implementation"
 - [ ] **Step 1: 编写 DTO 定义**
 
 ```go
-// module/category/dto.go
+// modules/category/dto.go
 package category
 
 // CreateCategoryReq 创建分类请求
@@ -644,7 +644,7 @@ type CategoryResp struct {
 - [ ] **Step 2: 编写 Handler 实现**
 
 ```go
-// module/category/handler/handler.go
+// modules/category/handler/handler.go
 package handler
 
 import (
@@ -725,13 +725,13 @@ func (h *Handler) Get(c *gin.Context) {
 - [ ] **Step 3: 验证编译**
 
 ```bash
-cd /home/lsk/projects/vidora/vidora-api && go build ./module/category/...
+cd /home/lsk/projects/vidora/vidora-api && go build ./modules/category/...
 ```
 
 - [ ] **Step 4: 提交**
 
 ```bash
-git add module/category/dto.go module/category/handler/
+git add modules/category/dto.go modules/category/handler/
 git commit -m "feat(module/category): add HTTP handlers and DTOs"
 ```
 
@@ -745,7 +745,7 @@ git commit -m "feat(module/category): add HTTP handlers and DTOs"
 - [ ] **Step 1: 编写模块注册入口**
 
 ```go
-// module/category/module.go
+// modules/category/modules.go
 package category
 
 import (
@@ -809,7 +809,7 @@ cd /home/lsk/projects/vidora/vidora-api && go build ./...
 - [ ] **Step 3: 提交**
 
 ```bash
-git add module/category/module.go
+git add modules/category/modules.go
 git commit -m "feat(module/category): add module registration"
 ```
 
@@ -979,7 +979,7 @@ import (
 	"github.com/vidora/vidora-api/core/event"
 	"github.com/vidora/vidora-api/infra"
 	"github.com/vidora/vidora-api/logic"
-	category_module "github.com/vidora/vidora-api/module/category"
+	category_module "github.com/vidora/vidora-api/modules/category"
 	"github.com/vidora/vidora-api/server/handlers"
 
 	"github.com/gin-gonic/gin"
@@ -1190,7 +1190,7 @@ module/<name>/
 - [ ] **Step 2: 提交**
 
 ```bash
-git add module/README.md
+git add modules/README.md
 git commit -m "docs: add module development guide"
 ```
 

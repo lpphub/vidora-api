@@ -180,7 +180,7 @@ module/video/
 ### 模块注册入口示例
 
 ```go
-// module/video/module.go
+// modules/video/modules.go
 package video
 
 type Module struct {
@@ -292,7 +292,7 @@ func (a *App) setupRouter() {
 ### 方式1：通过接口调用（同步）
 
 ```go
-// module/video/service/video_service.go
+// modules/video/service/video_service.go
 type VideoService struct {
     repo       port.Repository
     userSvc    port.UserService  // 注入用户服务接口
@@ -320,7 +320,7 @@ func (s *VideoService) GetWithAuthor(ctx context.Context, videoID uint) (*VideoD
 ### 方式2：通过事件总线（异步）
 
 ```go
-// module/video/service/video_service.go
+// modules/video/service/video_service.go
 func (s *VideoService) Publish(ctx context.Context, id uint) error {
     // 业务逻辑...
 
@@ -332,7 +332,7 @@ func (s *VideoService) Publish(ctx context.Context, id uint) error {
     return nil
 }
 
-// module/notification/module.go
+// modules/notification/modules.go
 func (m *Module) Init(eventBus *event.Bus) {
     eventBus.Subscribe("video.published", func(e event.Event) {
         // 发送通知...
@@ -358,7 +358,7 @@ mkdir -p core/{domain,port,event,middleware}
 选择最简单的模块（如 category）：
 
 ```bash
-mkdir -p module/category/{domain,port,service,repository,handler}
+mkdir -p modules/category/{domain,port,service,repository,handler}
 ```
 
 迁移步骤：

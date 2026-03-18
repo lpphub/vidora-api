@@ -1,4 +1,4 @@
-// module/user/handler.go
+// modules/user/handler.go
 package user
 
 import "github.com/gin-gonic/gin"

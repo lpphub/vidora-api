@@ -1,4 +1,4 @@
-// module/user/dto.go
+// modules/user/dto.go
 package user
 
 // CreateUserReq 创建用户请求

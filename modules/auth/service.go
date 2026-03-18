@@ -1,12 +1,12 @@
-// module/auth/service.go
+// modules/auth/service.go
 package auth
 
 import (
 	"context"
+	"vidora-api/infra/jwt"
+	"vidora-api/modules/core/contract"
 
 	"github.com/jinzhu/copier"
-	"vidora-api/contract"
-	"vidora-api/infra/jwt"
 )
 
 // Service 认证服务

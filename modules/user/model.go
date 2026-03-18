@@ -1,4 +1,4 @@
-// module/user/model.go
+// modules/user/model.go
 package user
 
 import (
