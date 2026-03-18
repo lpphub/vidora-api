@@ -16,8 +16,10 @@ import (
 	"vidora-api/infra"
 	"vidora-api/modules/auth"
 	"vidora-api/modules/tag"
+	tagModel "vidora-api/modules/tag/model"
 	"vidora-api/modules/user"
 	"vidora-api/modules/video"
+	vModel "vidora-api/modules/video/model"
 
 	"github.com/gin-gonic/gin"
 	"github.com/lpphub/goweb/ext/logx"
@@ -43,7 +45,23 @@ func (a *App) init() {
 	if err := infra.Init(); err != nil {
 		panic(fmt.Sprintf("Failed to init: %v", err))
 	}
+	a.autoMigrate()
 	a.setupRouter()
+}
+
+func (a *App) autoMigrate() {
+	err := infra.DB.AutoMigrate(
+		&user.User{},
+		&tagModel.Tag{},
+		&tagModel.TagGroup{},
+		&tagModel.VideoTag{},
+		&vModel.Video{},
+		&vModel.UploadFile{},
+	)
+	if err != nil {
+		panic(fmt.Sprintf("Failed to auto migrate: %v", err))
+	}
+	log.Println("Database tables migrated successfully")
 }
 
 func (a *App) setupRouter() {
