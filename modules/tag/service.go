@@ -21,49 +21,33 @@ func NewService(repo *Repository) *Service {
 }
 
 type CreateTagReq struct {
-	Name      string    `json:"name" binding:"required,max=50"`
-	GroupID   uint      `json:"groupId"`
-	Type      TagType   `json:"type"`
-	Color     string    `json:"color"`
-	SortOrder int       `json:"sortOrder"`
-	Status    TagStatus `json:"status"`
+	Name string `json:"name" binding:"required,max=50"`
+}
+
+type CreateTagInGroupReq struct {
+	Name    string `json:"name" binding:"required,max=50"`
+	GroupID uint   `json:"-"`
 }
 
 type UpdateTagReq struct {
-	Name      string    `json:"name"`
-	Color     string    `json:"color"`
-	SortOrder *int      `json:"sortOrder"`
-	Status    TagStatus `json:"status"`
+	Name string `json:"name" binding:"required,max=50"`
 }
 
-func (s *Service) Create(ctx context.Context, req CreateTagReq) (*Tag, error) {
+func (s *Service) Create(ctx context.Context, req CreateTagInGroupReq) (*Tag, error) {
 	exists, _ := s.repo.ExistsByName(ctx, req.Name, req.GroupID)
 	if exists {
-		if req.Type == TypeCategory {
-			return nil, errs.ErrCategoryExists
-		}
 		return nil, errs.ErrTagExists
 	}
 
-	status := StatusEnabled
-	if req.Status != "" {
-		status = req.Status
-	}
-
 	tag := &Tag{
-		Name:      req.Name,
-		GroupID:   req.GroupID,
-		Type:      req.Type,
-		Color:     req.Color,
-		SortOrder: req.SortOrder,
-		Status:    status,
+		GroupID: req.GroupID,
+		Name:    req.Name,
 	}
 
 	if err := s.repo.Create(ctx, tag); err != nil {
 		return nil, err
 	}
 
-	tag.UsageCount = 0
 	return tag, nil
 }
 
@@ -83,24 +67,6 @@ func (s *Service) GetByID(ctx context.Context, id uint) (*Tag, error) {
 	return tag, nil
 }
 
-func (s *Service) List(ctx context.Context, tagType *TagType) ([]Tag, error) {
-	var tags []Tag
-	var err error
-	if tagType != nil {
-		tags, err = s.repo.ListByType(ctx, *tagType)
-	} else {
-		tags, err = s.repo.List(ctx)
-	}
-	if err != nil {
-		return nil, err
-	}
-	for i := range tags {
-		count, _ := s.repo.GetUsageCount(ctx, tags[i].ID)
-		tags[i].UsageCount = int(count)
-	}
-	return tags, nil
-}
-
 func (s *Service) Update(ctx context.Context, id uint, req UpdateTagReq) (*Tag, error) {
 	tag, err := s.repo.First(ctx, id)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -110,34 +76,15 @@ func (s *Service) Update(ctx context.Context, id uint, req UpdateTagReq) (*Tag, 
 		return nil, err
 	}
 
-	updates := make(map[string]any)
 	if req.Name != "" && req.Name != tag.Name {
 		exists, _ := s.repo.ExistsByName(ctx, req.Name, tag.GroupID)
 		if exists {
 			return nil, errs.ErrTagExists
 		}
-		updates["name"] = req.Name
-	}
-	if tag.Type == TypeNormal && req.Color != "" {
-		updates["color"] = req.Color
-	}
-	if tag.Type == TypeCategory {
-		if req.SortOrder != nil {
-			updates["sort_order"] = *req.SortOrder
-		}
-		if req.Status != "" {
-			updates["status"] = req.Status
-		}
-	}
-
-	if len(updates) > 0 {
-		if err := s.repo.Update(ctx, id, updates); err != nil {
+		if err := s.repo.Update(ctx, id, map[string]any{"name": req.Name}); err != nil {
 			return nil, err
 		}
-		tag, err = s.repo.First(ctx, id)
-		if err != nil {
-			return nil, err
-		}
+		tag.Name = req.Name
 	}
 
 	count, err := s.repo.GetUsageCount(ctx, id)
