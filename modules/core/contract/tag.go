@@ -11,7 +11,7 @@ type TagBiz interface {
 
 // TagDTO 标签数据传输对象
 type TagDTO struct {
-	ID   uint
-	Name string
-	Type int8
+	ID      uint
+	Name    string
+	GroupID uint
 }
