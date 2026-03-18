@@ -1,4 +1,4 @@
-package tag
+package model
 
 import (
 	"time"

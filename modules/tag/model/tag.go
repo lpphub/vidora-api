@@ -1,4 +1,4 @@
-package tag
+package model
 
 import (
 	"time"
@@ -30,18 +30,15 @@ type Tag struct {
 	DeletedAt  gorm.DeletedAt `gorm:"index" json:"-"`
 }
 
-// TableName 指定表名
 func (*Tag) TableName() string {
 	return "tags"
 }
 
-// VideoTag 视频标签关联
 type VideoTag struct {
 	VideoID uint `gorm:"primaryKey"`
 	TagID   uint `gorm:"primaryKey"`
 }
 
-// TableName 指定表名
 func (*VideoTag) TableName() string {
 	return "video_tags"
 }

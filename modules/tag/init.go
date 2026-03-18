@@ -2,6 +2,9 @@ package tag
 
 import (
 	"vidora-api/modules/core"
+	"vidora-api/modules/tag/handler"
+	"vidora-api/modules/tag/repository"
+	"vidora-api/modules/tag/service"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -10,16 +13,16 @@ import (
 var _ core.Module = (*Module)(nil)
 
 type Module struct {
-	Service *Service
-	handler *Handler
+	Service *service.Service
+	handler *handler.Handler
 }
 
 func New(db *gorm.DB) *Module {
-	repo := NewRepository(db)
-	groupRepo := NewGroupRepository(db)
-	svc := NewService(repo)
-	groupSvc := NewGroupService(groupRepo, repo)
-	h := NewHandler(svc, groupSvc)
+	repo := repository.NewRepository(db)
+	groupRepo := repository.NewGroupRepository(db)
+	svc := service.NewService(repo)
+	groupSvc := service.NewGroupService(groupRepo, repo)
+	h := handler.NewHandler(svc, groupSvc)
 
 	return &Module{
 		Service: svc,
@@ -28,5 +31,5 @@ func New(db *gorm.DB) *Module {
 }
 
 func (m *Module) Routes(r *gin.RouterGroup) {
-	m.handler.register(r)
+	m.handler.Register(r)
 }

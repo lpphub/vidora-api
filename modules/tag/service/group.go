@@ -1,20 +1,22 @@
-package tag
+package service
 
 import (
 	"context"
 	"errors"
 
+	"vidora-api/modules/tag/model"
+	"vidora-api/modules/tag/repository"
 	"vidora-api/shared/errs"
 
 	"gorm.io/gorm"
 )
 
 type GroupService struct {
-	repo    *GroupRepository
-	tagRepo *Repository
+	repo    *repository.GroupRepository
+	tagRepo *repository.Repository
 }
 
-func NewGroupService(repo *GroupRepository, tagRepo *Repository) *GroupService {
+func NewGroupService(repo *repository.GroupRepository, tagRepo *repository.Repository) *GroupService {
 	return &GroupService{repo: repo, tagRepo: tagRepo}
 }
 
@@ -32,7 +34,7 @@ type ReorderGroupsReq struct {
 
 const DefaultGroupID uint = 0
 
-func (s *GroupService) List(ctx context.Context) ([]TagGroup, error) {
+func (s *GroupService) List(ctx context.Context) ([]model.TagGroup, error) {
 	groups, err := s.repo.ListWithTags(ctx)
 	if err != nil {
 		return nil, err
@@ -46,24 +48,24 @@ func (s *GroupService) List(ctx context.Context) ([]TagGroup, error) {
 	return groups, nil
 }
 
-func (s *GroupService) Create(ctx context.Context, req CreateGroupReq) (*TagGroup, error) {
+func (s *GroupService) Create(ctx context.Context, req CreateGroupReq) (*model.TagGroup, error) {
 	exists, _ := s.repo.ExistsByName(ctx, req.Name)
 	if exists {
 		return nil, errs.ErrTagGroupExists
 	}
 	maxOrder, _ := s.repo.GetMaxSortOrder(ctx)
-	group := &TagGroup{
+	group := &model.TagGroup{
 		Name:      req.Name,
 		SortOrder: maxOrder + 1,
 	}
 	if err := s.repo.Create(ctx, group); err != nil {
 		return nil, err
 	}
-	group.Tags = []Tag{}
+	group.Tags = []model.Tag{}
 	return group, nil
 }
 
-func (s *GroupService) Update(ctx context.Context, id uint, req UpdateGroupReq) (*TagGroup, error) {
+func (s *GroupService) Update(ctx context.Context, id uint, req UpdateGroupReq) (*model.TagGroup, error) {
 	group, err := s.repo.First(ctx, id)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, errs.ErrTagGroupNotFound

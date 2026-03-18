@@ -1,20 +1,21 @@
-package tag
+package handler
 
 import (
 	"github.com/gin-gonic/gin"
+	"vidora-api/modules/tag/service"
 	"vidora-api/server/helper"
 )
 
 type Handler struct {
-	svc      *Service
-	groupSvc *GroupService
+	svc      *service.Service
+	groupSvc *service.GroupService
 }
 
-func NewHandler(svc *Service, groupSvc *GroupService) *Handler {
+func NewHandler(svc *service.Service, groupSvc *service.GroupService) *Handler {
 	return &Handler{svc: svc, groupSvc: groupSvc}
 }
 
-func (h *Handler) register(r *gin.RouterGroup) {
+func (h *Handler) Register(r *gin.RouterGroup) {
 	gh := NewGroupHandler(h.groupSvc)
 	r.GET("/tag-groups", gh.List)
 	r.POST("/tag-groups", gh.Create)
@@ -31,11 +32,11 @@ func (h *Handler) CreateTag(c *gin.Context) {
 	if !ok {
 		return
 	}
-	var req CreateTagReq
+	var req service.CreateTagReq
 	if !helper.MustBindJSON(c, &req) {
 		return
 	}
-	tag, err := h.svc.Create(c.Request.Context(), CreateTagInGroupReq{
+	tag, err := h.svc.Create(c.Request.Context(), service.CreateTagInGroupReq{
 		Name:    req.Name,
 		GroupID: groupID,
 	})
@@ -47,7 +48,7 @@ func (h *Handler) UpdateTag(c *gin.Context) {
 	if !ok {
 		return
 	}
-	var req UpdateTagReq
+	var req service.UpdateTagReq
 	if !helper.MustBindJSON(c, &req) {
 		return
 	}

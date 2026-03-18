@@ -1,10 +1,12 @@
-package tag
+package service
 
 import (
 	"context"
 	"errors"
 
 	"vidora-api/modules/core/contract"
+	"vidora-api/modules/tag/model"
+	"vidora-api/modules/tag/repository"
 	"vidora-api/shared/errs"
 
 	"gorm.io/gorm"
@@ -13,10 +15,10 @@ import (
 var _ contract.TagBiz = (*Service)(nil)
 
 type Service struct {
-	repo *Repository
+	repo *repository.Repository
 }
 
-func NewService(repo *Repository) *Service {
+func NewService(repo *repository.Repository) *Service {
 	return &Service{repo: repo}
 }
 
@@ -33,13 +35,13 @@ type UpdateTagReq struct {
 	Name string `json:"name" binding:"required,max=50"`
 }
 
-func (s *Service) Create(ctx context.Context, req CreateTagInGroupReq) (*Tag, error) {
+func (s *Service) Create(ctx context.Context, req CreateTagInGroupReq) (*model.Tag, error) {
 	exists, _ := s.repo.ExistsByName(ctx, req.Name, req.GroupID)
 	if exists {
 		return nil, errs.ErrTagExists
 	}
 
-	tag := &Tag{
+	tag := &model.Tag{
 		GroupID: req.GroupID,
 		Name:    req.Name,
 	}
@@ -51,7 +53,7 @@ func (s *Service) Create(ctx context.Context, req CreateTagInGroupReq) (*Tag, er
 	return tag, nil
 }
 
-func (s *Service) GetByID(ctx context.Context, id uint) (*Tag, error) {
+func (s *Service) GetByID(ctx context.Context, id uint) (*model.Tag, error) {
 	tag, err := s.repo.First(ctx, id)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, errs.ErrTagNotFound
@@ -67,7 +69,7 @@ func (s *Service) GetByID(ctx context.Context, id uint) (*Tag, error) {
 	return tag, nil
 }
 
-func (s *Service) Update(ctx context.Context, id uint, req UpdateTagReq) (*Tag, error) {
+func (s *Service) Update(ctx context.Context, id uint, req UpdateTagReq) (*model.Tag, error) {
 	tag, err := s.repo.First(ctx, id)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, errs.ErrTagNotFound
@@ -120,7 +122,7 @@ func (s *Service) ExistByIDs(ctx context.Context, ids []uint) error {
 	return nil
 }
 
-func (s *Service) GetVideoTags(ctx context.Context, videoID uint) ([]Tag, error) {
+func (s *Service) GetVideoTags(ctx context.Context, videoID uint) ([]model.Tag, error) {
 	return s.repo.GetVideoTags(ctx, videoID)
 }
 
