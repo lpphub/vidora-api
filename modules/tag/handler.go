@@ -6,55 +6,44 @@ import (
 )
 
 type Handler struct {
-	svc *Service
+	svc      *Service
+	groupSvc *GroupService
 }
 
-func NewHandler(svc *Service) *Handler {
-	return &Handler{svc: svc}
+func NewHandler(svc *Service, groupSvc *GroupService) *Handler {
+	return &Handler{svc: svc, groupSvc: groupSvc}
 }
 
 func (h *Handler) register(r *gin.RouterGroup) {
-	r.POST("/tags", h.Create)
-	r.GET("/tags", h.List)
-	r.GET("/tags/:id", h.Get)
-	r.PUT("/tags/:id", h.Update)
-	r.DELETE("/tags/:id", h.Delete)
+	gh := NewGroupHandler(h.groupSvc)
+	r.GET("/tag-groups", gh.List)
+	r.POST("/tag-groups", gh.Create)
+	r.PUT("/tag-groups/:id", gh.Update)
+	r.DELETE("/tag-groups/:id", gh.Delete)
+	r.PUT("/tag-groups/reorder", gh.Reorder)
+	r.POST("/tag-groups/:groupId/tags", h.CreateTag)
+	r.PUT("/tag-groups/:groupId/tags/:tagId", h.UpdateTag)
+	r.DELETE("/tag-groups/:groupId/tags/:tagId", h.DeleteTag)
 }
 
-func (h *Handler) Create(c *gin.Context) {
+func (h *Handler) CreateTag(c *gin.Context) {
+	groupID, ok := helper.MustParseUintParam(c, "groupId")
+	if !ok {
+		return
+	}
 	var req CreateTagReq
 	if !helper.MustBindJSON(c, &req) {
 		return
 	}
-	tag, err := h.svc.Create(c.Request.Context(), req)
+	tag, err := h.svc.Create(c.Request.Context(), CreateTagInGroupReq{
+		Name:    req.Name,
+		GroupID: groupID,
+	})
 	helper.Respond(c, err, tag)
 }
 
-func (h *Handler) List(c *gin.Context) {
-	typeStr := c.Query("type")
-	var tagType *TagType
-	if typeStr != "" {
-		t := TagType(0)
-		if typeStr == "1" {
-			t = TypeCategory
-		}
-		tagType = &t
-	}
-	tags, err := h.svc.List(c.Request.Context(), tagType)
-	helper.Respond(c, err, tags)
-}
-
-func (h *Handler) Get(c *gin.Context) {
-	id, ok := helper.MustParseUintParam(c, "id")
-	if !ok {
-		return
-	}
-	tag, err := h.svc.GetByID(c.Request.Context(), id)
-	helper.Respond(c, err, tag)
-}
-
-func (h *Handler) Update(c *gin.Context) {
-	id, ok := helper.MustParseUintParam(c, "id")
+func (h *Handler) UpdateTag(c *gin.Context) {
+	tagID, ok := helper.MustParseUintParam(c, "tagId")
 	if !ok {
 		return
 	}
@@ -62,15 +51,15 @@ func (h *Handler) Update(c *gin.Context) {
 	if !helper.MustBindJSON(c, &req) {
 		return
 	}
-	tag, err := h.svc.Update(c.Request.Context(), id, req)
+	tag, err := h.svc.Update(c.Request.Context(), tagID, req)
 	helper.Respond(c, err, tag)
 }
 
-func (h *Handler) Delete(c *gin.Context) {
-	id, ok := helper.MustParseUintParam(c, "id")
+func (h *Handler) DeleteTag(c *gin.Context) {
+	tagID, ok := helper.MustParseUintParam(c, "tagId")
 	if !ok {
 		return
 	}
-	err := h.svc.Delete(c.Request.Context(), id)
-	helper.Respond(c, err, nil)
+	err := h.svc.Delete(c.Request.Context(), tagID)
+	helper.Respond(c, err, gin.H{"success": true})
 }
