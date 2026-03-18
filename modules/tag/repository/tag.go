@@ -25,12 +25,6 @@ func (r *Repository) ListByGroup(ctx context.Context, groupID uint) ([]model.Tag
 	return tags, err
 }
 
-func (r *Repository) ListByGroupIDs(ctx context.Context, groupIDs []uint) ([]model.Tag, error) {
-	var tags []model.Tag
-	err := r.DB().WithContext(ctx).Where("group_id IN ?", groupIDs).Order("created_at ASC").Find(&tags).Error
-	return tags, err
-}
-
 func (r *Repository) ListAll(ctx context.Context) ([]model.Tag, error) {
 	var tags []model.Tag
 	err := r.DB().WithContext(ctx).Order("created_at ASC").Find(&tags).Error
