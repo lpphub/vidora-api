@@ -19,12 +19,13 @@ const (
 
 type Tag struct {
 	ID         uint           `gorm:"primaryKey" json:"id"`
-	Name       string         `gorm:"size:50;not null;uniqueIndex" json:"name"`
-	Type       TagType        `gorm:"default:0;index" json:"type"`
+	GroupID    uint           `gorm:"not null;default:0;index:idx_group_name" json:"groupId"`
+	Name       string         `gorm:"size:50;not null;index:idx_group_name" json:"name"`
+	Type       TagType        `gorm:"default:0;index" json:"type,omitempty"`
 	Color      string         `gorm:"size:7" json:"color,omitempty"`
 	SortOrder  int            `gorm:"default:0" json:"sortOrder,omitempty"`
 	Status     TagStatus      `gorm:"size:10;default:'enabled'" json:"status,omitempty"`
-	UsageCount int            `gorm:"default:0" json:"usageCount"`
+	UsageCount int            `gorm:"-" json:"usageCount"`
 	CreatedAt  time.Time      `json:"createdAt"`
 	DeletedAt  gorm.DeletedAt `gorm:"index" json:"-"`
 }
@@ -32,11 +33,6 @@ type Tag struct {
 // TableName 指定表名
 func (*Tag) TableName() string {
 	return "tags"
-}
-
-// IsCategory 是否是分类
-func (t *Tag) IsCategory() bool {
-	return t.Type == TypeCategory
 }
 
 // VideoTag 视频标签关联
