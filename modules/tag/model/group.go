@@ -1,18 +1,12 @@
 package model
 
-import (
-	"time"
-
-	"gorm.io/gorm"
-)
+import "time"
 
 type TagGroup struct {
-	ID        uint           `gorm:"primaryKey" json:"id"`
-	Name      string         `gorm:"size:50;not null" json:"name"`
-	SortOrder int            `gorm:"default:0" json:"sortOrder"`
-	Tags      []Tag          `gorm:"foreignKey:GroupID" json:"tagList,omitempty"`
-	CreatedAt time.Time      `json:"createdAt"`
-	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
+	ID        uint      `gorm:"primaryKey" json:"id"`
+	Name      string    `gorm:"size:50;not null" json:"name"`
+	SortOrder int       `gorm:"default:0" json:"sortOrder"`
+	CreatedAt time.Time `json:"createdAt"`
 }
 
 func (*TagGroup) TableName() string {

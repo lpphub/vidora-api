@@ -24,18 +24,15 @@ import (
 	"github.com/lpphub/goweb/monitor"
 )
 
-// App 应用
 type App struct {
 	engine *gin.Engine
 	server *http.Server
 }
 
-// New 创建应用
 func New() *App {
 	return &App{engine: gin.New()}
 }
 
-// Run 启动应用
 func (a *App) Run() {
 	a.init()
 	a.start()
@@ -52,17 +49,14 @@ func (a *App) init() {
 func (a *App) setupRouter() {
 	r := a.engine
 
-	// 中间件
 	r.Use(gin.Recovery(), logx.GinAccessLog(logx.WithSkipPaths("/metrics", "/health")))
 	r.Use(middleware.Cors())
 
-	// 系统路由
 	monitor.RegisterMetrics(r)
 	r.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{"status": "ok"})
 	})
 
-	// 业务路由 - 按依赖顺序注册
 	for _, m := range a.registerModules() {
 		m.Routes(r.Group(""))
 	}

@@ -19,21 +19,9 @@ func NewRepository(db *gorm.DB) *Repository {
 	}
 }
 
-func (r *Repository) List(ctx context.Context) ([]model.Tag, error) {
-	var tags []model.Tag
-	err := r.DB().WithContext(ctx).Order("created_at ASC").Find(&tags).Error
-	return tags, err
-}
-
 func (r *Repository) ListByGroup(ctx context.Context, groupID uint) ([]model.Tag, error) {
 	var tags []model.Tag
 	err := r.DB().WithContext(ctx).Where("group_id = ?", groupID).Order("created_at ASC").Find(&tags).Error
-	return tags, err
-}
-
-func (r *Repository) ListByType(ctx context.Context, tagType model.TagType) ([]model.Tag, error) {
-	var tags []model.Tag
-	err := r.DB().WithContext(ctx).Where("type = ?", tagType).Order("sort_order ASC, name ASC").Find(&tags).Error
 	return tags, err
 }
 
@@ -73,12 +61,6 @@ func (r *Repository) Update(ctx context.Context, id uint, updates map[string]any
 
 func (r *Repository) Delete(ctx context.Context, id uint) error {
 	return r.DB().WithContext(ctx).Delete(&model.Tag{}, id).Error
-}
-
-func (r *Repository) GetUsageCount(ctx context.Context, tagID uint) (int64, error) {
-	var count int64
-	err := r.DB().WithContext(ctx).Model(&model.VideoTag{}).Where("tag_id = ?", tagID).Count(&count).Error
-	return count, err
 }
 
 func (r *Repository) MoveToGroup(ctx context.Context, fromGroupID, toGroupID uint) error {

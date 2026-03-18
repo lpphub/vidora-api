@@ -19,14 +19,9 @@ func NewGroupRepository(db *gorm.DB) *GroupRepository {
 	}
 }
 
-func (r *GroupRepository) ListWithTags(ctx context.Context) ([]model.TagGroup, error) {
+func (r *GroupRepository) List(ctx context.Context) ([]model.TagGroup, error) {
 	var groups []model.TagGroup
-	err := r.DB().WithContext(ctx).
-		Preload("Tags", func(db *gorm.DB) *gorm.DB {
-			return db.Order("created_at ASC")
-		}).
-		Order("sort_order ASC, id ASC").
-		Find(&groups).Error
+	err := r.DB().WithContext(ctx).Order("sort_order ASC, id ASC").Find(&groups).Error
 	return groups, err
 }
 

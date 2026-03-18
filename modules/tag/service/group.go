@@ -34,21 +34,28 @@ type ReorderGroupsReq struct {
 
 const DefaultGroupID uint = 0
 
-func (s *GroupService) List(ctx context.Context) ([]model.TagGroup, error) {
-	groups, err := s.repo.ListWithTags(ctx)
+type TagGroupWithTags struct {
+	model.TagGroup
+	TagList []model.Tag `json:"tagList"`
+}
+
+func (s *GroupService) List(ctx context.Context) ([]TagGroupWithTags, error) {
+	groups, err := s.repo.List(ctx)
 	if err != nil {
 		return nil, err
 	}
-	for i := range groups {
-		for j := range groups[i].Tags {
-			count, _ := s.tagRepo.GetUsageCount(ctx, groups[i].Tags[j].ID)
-			groups[i].Tags[j].UsageCount = int(count)
+	result := make([]TagGroupWithTags, len(groups))
+	for i, g := range groups {
+		tags, _ := s.tagRepo.ListByGroup(ctx, g.ID)
+		result[i] = TagGroupWithTags{
+			TagGroup: g,
+			TagList:  tags,
 		}
 	}
-	return groups, nil
+	return result, nil
 }
 
-func (s *GroupService) Create(ctx context.Context, req CreateGroupReq) (*model.TagGroup, error) {
+func (s *GroupService) Create(ctx context.Context, req CreateGroupReq) (*TagGroupWithTags, error) {
 	exists, _ := s.repo.ExistsByName(ctx, req.Name)
 	if exists {
 		return nil, errs.ErrTagGroupExists
@@ -61,11 +68,10 @@ func (s *GroupService) Create(ctx context.Context, req CreateGroupReq) (*model.T
 	if err := s.repo.Create(ctx, group); err != nil {
 		return nil, err
 	}
-	group.Tags = []model.Tag{}
-	return group, nil
+	return &TagGroupWithTags{TagGroup: *group, TagList: []model.Tag{}}, nil
 }
 
-func (s *GroupService) Update(ctx context.Context, id uint, req UpdateGroupReq) (*model.TagGroup, error) {
+func (s *GroupService) Update(ctx context.Context, id uint, req UpdateGroupReq) (*TagGroupWithTags, error) {
 	group, err := s.repo.First(ctx, id)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, errs.ErrTagGroupNotFound
@@ -83,8 +89,8 @@ func (s *GroupService) Update(ctx context.Context, id uint, req UpdateGroupReq) 
 		}
 		group.Name = req.Name
 	}
-	group.Tags, _ = s.tagRepo.ListByGroup(ctx, id)
-	return group, nil
+	tags, _ := s.tagRepo.ListByGroup(ctx, id)
+	return &TagGroupWithTags{TagGroup: *group, TagList: tags}, nil
 }
 
 func (s *GroupService) Delete(ctx context.Context, id uint) error {

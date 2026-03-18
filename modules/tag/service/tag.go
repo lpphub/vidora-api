@@ -58,15 +58,7 @@ func (s *Service) GetByID(ctx context.Context, id uint) (*model.Tag, error) {
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, errs.ErrTagNotFound
 	}
-	if err != nil {
-		return nil, err
-	}
-	count, err := s.repo.GetUsageCount(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-	tag.UsageCount = int(count)
-	return tag, nil
+	return tag, err
 }
 
 func (s *Service) Update(ctx context.Context, id uint, req UpdateTagReq) (*model.Tag, error) {
@@ -88,12 +80,6 @@ func (s *Service) Update(ctx context.Context, id uint, req UpdateTagReq) (*model
 		}
 		tag.Name = req.Name
 	}
-
-	count, err := s.repo.GetUsageCount(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-	tag.UsageCount = int(count)
 	return tag, nil
 }
 
