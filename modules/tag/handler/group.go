@@ -1,9 +1,10 @@
 package handler
 
 import (
-	"github.com/gin-gonic/gin"
 	"vidora-api/modules/tag/service"
 	"vidora-api/server/helper"
+
+	"github.com/gin-gonic/gin"
 )
 
 type GroupHandler struct {
@@ -20,7 +21,7 @@ func (h *GroupHandler) List(c *gin.Context) {
 }
 
 func (h *GroupHandler) Create(c *gin.Context) {
-	var req service.CreateGroupReq
+	var req service.GroupReq
 	if !helper.MustBindJSON(c, &req) {
 		return
 	}
@@ -33,7 +34,7 @@ func (h *GroupHandler) Update(c *gin.Context) {
 	if !ok {
 		return
 	}
-	var req service.UpdateGroupReq
+	var req service.GroupReq
 	if !helper.MustBindJSON(c, &req) {
 		return
 	}

@@ -1,9 +1,10 @@
 package handler
 
 import (
-	"github.com/gin-gonic/gin"
 	"vidora-api/modules/tag/service"
 	"vidora-api/server/helper"
+
+	"github.com/gin-gonic/gin"
 )
 
 type Handler struct {
@@ -32,7 +33,7 @@ func (h *Handler) CreateTag(c *gin.Context) {
 	if !ok {
 		return
 	}
-	var req service.CreateTagReq
+	var req service.TagReq
 	if !helper.MustBindJSON(c, &req) {
 		return
 	}
@@ -48,7 +49,7 @@ func (h *Handler) UpdateTag(c *gin.Context) {
 	if !ok {
 		return
 	}
-	var req service.UpdateTagReq
+	var req service.TagReq
 	if !helper.MustBindJSON(c, &req) {
 		return
 	}

@@ -20,11 +20,7 @@ func NewGroupService(repo *repository.GroupRepository, tagRepo *repository.Repos
 	return &GroupService{repo: repo, tagRepo: tagRepo}
 }
 
-type CreateGroupReq struct {
-	Name string `json:"name" binding:"required,max=50"`
-}
-
-type UpdateGroupReq struct {
+type GroupReq struct {
 	Name string `json:"name" binding:"required,max=50"`
 }
 
@@ -44,18 +40,39 @@ func (s *GroupService) List(ctx context.Context) ([]TagGroupWithTags, error) {
 	if err != nil {
 		return nil, err
 	}
-	result := make([]TagGroupWithTags, len(groups))
+
+	groupIDs := make([]uint, len(groups)+1)
+	groupIDs[0] = DefaultGroupID
 	for i, g := range groups {
-		tags, _ := s.tagRepo.ListByGroup(ctx, g.ID)
-		result[i] = TagGroupWithTags{
+		groupIDs[i+1] = g.ID
+	}
+
+	allTags, _ := s.tagRepo.ListByGroupIDs(ctx, groupIDs)
+	tagMap := make(map[uint][]model.Tag)
+	for _, t := range allTags {
+		tagMap[t.GroupID] = append(tagMap[t.GroupID], t)
+	}
+
+	result := make([]TagGroupWithTags, 0, len(groups)+1)
+	result = append(result, TagGroupWithTags{
+		TagGroup: model.TagGroup{
+			ID:        DefaultGroupID,
+			Name:      "默认标签组",
+			SortOrder: 0,
+		},
+		TagList: tagMap[DefaultGroupID],
+	})
+
+	for _, g := range groups {
+		result = append(result, TagGroupWithTags{
 			TagGroup: g,
-			TagList:  tags,
-		}
+			TagList:  tagMap[g.ID],
+		})
 	}
 	return result, nil
 }
 
-func (s *GroupService) Create(ctx context.Context, req CreateGroupReq) (*TagGroupWithTags, error) {
+func (s *GroupService) Create(ctx context.Context, req GroupReq) (*TagGroupWithTags, error) {
 	exists, _ := s.repo.ExistsByName(ctx, req.Name)
 	if exists {
 		return nil, errs.ErrTagGroupExists
@@ -71,7 +88,7 @@ func (s *GroupService) Create(ctx context.Context, req CreateGroupReq) (*TagGrou
 	return &TagGroupWithTags{TagGroup: *group, TagList: []model.Tag{}}, nil
 }
 
-func (s *GroupService) Update(ctx context.Context, id uint, req UpdateGroupReq) (*TagGroupWithTags, error) {
+func (s *GroupService) Update(ctx context.Context, id uint, req GroupReq) (*TagGroupWithTags, error) {
 	group, err := s.repo.First(ctx, id)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, errs.ErrTagGroupNotFound

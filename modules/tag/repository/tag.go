@@ -25,6 +25,12 @@ func (r *Repository) ListByGroup(ctx context.Context, groupID uint) ([]model.Tag
 	return tags, err
 }
 
+func (r *Repository) ListByGroupIDs(ctx context.Context, groupIDs []uint) ([]model.Tag, error) {
+	var tags []model.Tag
+	err := r.DB().WithContext(ctx).Where("group_id IN ?", groupIDs).Order("created_at ASC").Find(&tags).Error
+	return tags, err
+}
+
 func (r *Repository) ExistsByName(ctx context.Context, name string, groupID uint) (bool, error) {
 	var count int64
 	err := r.DB().WithContext(ctx).Model(&model.Tag{}).Where("name = ? AND group_id = ?", name, groupID).Count(&count).Error

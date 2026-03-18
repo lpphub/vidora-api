@@ -22,17 +22,13 @@ func NewService(repo *repository.Repository) *Service {
 	return &Service{repo: repo}
 }
 
-type CreateTagReq struct {
+type TagReq struct {
 	Name string `json:"name" binding:"required,max=50"`
 }
 
 type CreateTagInGroupReq struct {
 	Name    string `json:"name" binding:"required,max=50"`
 	GroupID uint   `json:"-"`
-}
-
-type UpdateTagReq struct {
-	Name string `json:"name" binding:"required,max=50"`
 }
 
 func (s *Service) Create(ctx context.Context, req CreateTagInGroupReq) (*model.Tag, error) {
@@ -61,7 +57,7 @@ func (s *Service) GetByID(ctx context.Context, id uint) (*model.Tag, error) {
 	return tag, err
 }
 
-func (s *Service) Update(ctx context.Context, id uint, req UpdateTagReq) (*model.Tag, error) {
+func (s *Service) Update(ctx context.Context, id uint, req TagReq) (*model.Tag, error) {
 	tag, err := s.repo.First(ctx, id)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, errs.ErrTagNotFound
