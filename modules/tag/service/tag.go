@@ -32,7 +32,10 @@ type CreateTagInGroupReq struct {
 }
 
 func (s *Service) Create(ctx context.Context, req CreateTagInGroupReq) (*model.Tag, error) {
-	exists, _ := s.repo.ExistsByName(ctx, req.Name, req.GroupID)
+	exists, err := s.repo.ExistsByName(ctx, req.Name, req.GroupID)
+	if err != nil {
+		return nil, err
+	}
 	if exists {
 		return nil, errs.ErrTagExists
 	}
@@ -66,8 +69,11 @@ func (s *Service) Update(ctx context.Context, id uint, req TagReq) error {
 		return err
 	}
 
-	if req.Name != "" && req.Name != tag.Name {
-		exists, _ := s.repo.ExistsByName(ctx, req.Name, tag.GroupID)
+	if req.Name != tag.Name {
+		exists, err := s.repo.ExistsByName(ctx, req.Name, tag.GroupID)
+		if err != nil {
+			return err
+		}
 		if exists {
 			return errs.ErrTagExists
 		}

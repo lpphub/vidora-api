@@ -19,12 +19,6 @@ func NewRepository(db *gorm.DB) *Repository {
 	}
 }
 
-func (r *Repository) ListByGroup(ctx context.Context, groupID uint) ([]model.Tag, error) {
-	var tags []model.Tag
-	err := r.DB().WithContext(ctx).Where("group_id = ?", groupID).Order("created_at ASC").Find(&tags).Error
-	return tags, err
-}
-
 func (r *Repository) ListAll(ctx context.Context) ([]model.Tag, error) {
 	var tags []model.Tag
 	err := r.DB().WithContext(ctx).Order("created_at ASC").Find(&tags).Error
@@ -43,7 +37,7 @@ func (r *Repository) SyncVideoTags(ctx context.Context, videoID uint, tagIDs []u
 		if len(tagIDs) == 0 {
 			return nil
 		}
-		var vts []model.VideoTag
+		vts := make([]model.VideoTag, 0, len(tagIDs))
 		for _, tid := range tagIDs {
 			vts = append(vts, model.VideoTag{VideoID: videoID, TagID: tid})
 		}
@@ -59,14 +53,6 @@ func (r *Repository) GetVideoTags(ctx context.Context, videoID uint) ([]model.Ta
 		Where("video_tags.video_id = ?", videoID).
 		Find(&tags).Error
 	return tags, err
-}
-
-func (r *Repository) Update(ctx context.Context, id uint, updates map[string]any) error {
-	return r.DB().WithContext(ctx).Model(&model.Tag{}).Where("id = ?", id).Updates(updates).Error
-}
-
-func (r *Repository) Delete(ctx context.Context, id uint) error {
-	return r.DB().WithContext(ctx).Delete(&model.Tag{}, id).Error
 }
 
 func (r *Repository) MoveToGroup(ctx context.Context, fromGroupID, toGroupID uint) error {

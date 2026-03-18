@@ -28,8 +28,6 @@ type ReorderGroupsReq struct {
 	IDs []uint `json:"ids" binding:"required"`
 }
 
-const DefaultGroupID uint = 0
-
 type TagGroupWithTags struct {
 	model.TagGroup
 	TagList []model.Tag `json:"tagList"`
@@ -54,11 +52,11 @@ func (s *GroupService) List(ctx context.Context) ([]TagGroupWithTags, error) {
 	result := make([]TagGroupWithTags, 0, len(groups)+1)
 	result = append(result, TagGroupWithTags{
 		TagGroup: model.TagGroup{
-			ID:        DefaultGroupID,
-			Name:      "默认标签组",
+			ID:        0,
+			Name:      "默认",
 			SortOrder: 0,
 		},
-		TagList: tagMap[DefaultGroupID],
+		TagList: tagMap[0],
 	})
 
 	for _, g := range groups {
@@ -71,11 +69,17 @@ func (s *GroupService) List(ctx context.Context) ([]TagGroupWithTags, error) {
 }
 
 func (s *GroupService) Create(ctx context.Context, req GroupReq) (*TagGroupWithTags, error) {
-	exists, _ := s.repo.ExistsByName(ctx, req.Name)
+	exists, err := s.repo.ExistsByName(ctx, req.Name)
+	if err != nil {
+		return nil, err
+	}
 	if exists {
 		return nil, errs.ErrTagGroupExists
 	}
-	maxOrder, _ := s.repo.GetMaxSortOrder(ctx)
+	maxOrder, err := s.repo.GetMaxSortOrder(ctx)
+	if err != nil {
+		return nil, err
+	}
 	group := &model.TagGroup{
 		Name:      req.Name,
 		SortOrder: maxOrder + 1,
@@ -95,7 +99,10 @@ func (s *GroupService) Update(ctx context.Context, id uint, req GroupReq) error 
 		return err
 	}
 	if req.Name != group.Name {
-		exists, _ := s.repo.ExistsByName(ctx, req.Name)
+		exists, err := s.repo.ExistsByName(ctx, req.Name)
+		if err != nil {
+			return err
+		}
 		if exists {
 			return errs.ErrTagGroupExists
 		}
@@ -105,7 +112,7 @@ func (s *GroupService) Update(ctx context.Context, id uint, req GroupReq) error 
 }
 
 func (s *GroupService) Delete(ctx context.Context, id uint) error {
-	if id == DefaultGroupID {
+	if id == 0 {
 		return errs.ErrCannotDeleteDefaultGroup
 	}
 	_, err := s.repo.First(ctx, id)
@@ -115,7 +122,7 @@ func (s *GroupService) Delete(ctx context.Context, id uint) error {
 	if err != nil {
 		return err
 	}
-	if err := s.tagRepo.MoveToGroup(ctx, id, DefaultGroupID); err != nil {
+	if err := s.tagRepo.MoveToGroup(ctx, id, 0); err != nil {
 		return err
 	}
 	return s.repo.Delete(ctx, id)
