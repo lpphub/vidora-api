@@ -43,7 +43,6 @@ func (a *App) init() {
 	if err := infra.Init(); err != nil {
 		panic(fmt.Sprintf("Failed to init: %v", err))
 	}
-	infra.AutoMigrate()
 	a.setupRouter()
 }
 

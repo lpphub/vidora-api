@@ -20,16 +20,16 @@ func (h *Handler) Register(r *gin.RouterGroup) {
 	gh := NewGroupHandler(h.groupSvc)
 	r.GET("/tag-groups", gh.List)
 	r.POST("/tag-groups", gh.Create)
+	r.PUT("/tag-groups/reorder", gh.Reorder)
 	r.PUT("/tag-groups/:id", gh.Update)
 	r.DELETE("/tag-groups/:id", gh.Delete)
-	r.PUT("/tag-groups/reorder", gh.Reorder)
-	r.POST("/tag-groups/:groupId/tags", h.CreateTag)
-	r.PUT("/tag-groups/:groupId/tags/:tagId", h.UpdateTag)
-	r.DELETE("/tag-groups/:groupId/tags/:tagId", h.DeleteTag)
+	r.POST("/tag-groups/:id/tags", h.CreateTag)
+	r.PUT("/tag-groups/:id/tags/:tagId", h.UpdateTag)
+	r.DELETE("/tag-groups/:id/tags/:tagId", h.DeleteTag)
 }
 
 func (h *Handler) CreateTag(c *gin.Context) {
-	groupID, ok := helper.MustParseUintParam(c, "groupId")
+	groupID, ok := helper.MustParseUintParam(c, "id")
 	if !ok {
 		return
 	}
