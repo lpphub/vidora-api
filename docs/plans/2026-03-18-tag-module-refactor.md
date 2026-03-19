@@ -801,7 +801,7 @@ Expected: No errors
 **Step 3: Commit**
 
 ```bash
-git add modules/core/contract/tag.go
+git add modules/core/contracts/tag.go
 git commit -m "refactor(contract): update TagDTO with GroupID"
 ```
 

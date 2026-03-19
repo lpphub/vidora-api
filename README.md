@@ -81,7 +81,7 @@ HTTP → Handler → Service → Repository → DB
 **contract/** - 跨模块接口契约，用于解耦和解决循环依赖：
 
 ```go
-// contract/user.go
+// contracts/user.go
 type UserBiz interface {
     Create(ctx context.Context, email, password string) (*UserDTO, error)
 }

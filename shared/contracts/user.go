@@ -1,5 +1,5 @@
-// contract/user.go
-package contract
+// contracts/user.go
+package contracts
 
 import "context"
 

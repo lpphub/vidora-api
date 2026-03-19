@@ -3,7 +3,7 @@ package auth
 
 import (
 	"vidora-api/modules/core"
-	"vidora-api/modules/core/contract"
+	"vidora-api/shared/contracts"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,7 +18,7 @@ type Module struct {
 }
 
 // New 创建认证模块
-func New(userSvc contract.UserBiz) *Module {
+func New(userSvc contracts.UserBiz) *Module {
 	svc := NewService(userSvc)
 	h := NewHandler(svc)
 

@@ -1,5 +1,5 @@
-// contract/video.go
-package contract
+// contracts/video.go
+package contracts
 
 import "context"
 

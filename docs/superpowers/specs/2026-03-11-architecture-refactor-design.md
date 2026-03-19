@@ -182,7 +182,7 @@ func InitializeApp() (*server.App, func(), error) {
 
 1. 在 `contract/` 定义接口：
 ```go
-// contract/user.go
+// contracts/user.go
 package contract
 
 type UserService interface {

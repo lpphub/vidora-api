@@ -1,5 +1,5 @@
-// contract/tag.go
-package contract
+// contracts/tag.go
+package contracts
 
 import "context"
 

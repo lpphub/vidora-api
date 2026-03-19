@@ -4,15 +4,15 @@ import (
 	"context"
 	"errors"
 
-	"vidora-api/modules/core/contract"
 	"vidora-api/modules/tag/model"
 	"vidora-api/modules/tag/repository"
+	"vidora-api/shared/contracts"
 	"vidora-api/shared/errs"
 
 	"gorm.io/gorm"
 )
 
-var _ contract.TagBiz = (*Service)(nil)
+var _ contracts.TagBiz = (*Service)(nil)
 
 type Service struct {
 	repo *repository.Repository

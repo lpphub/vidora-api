@@ -4,18 +4,18 @@ package auth
 import (
 	"context"
 	"vidora-api/infra/jwt"
-	"vidora-api/modules/core/contract"
+	"vidora-api/shared/contracts"
 
 	"github.com/jinzhu/copier"
 )
 
 // Service 认证服务
 type Service struct {
-	userSvc contract.UserBiz
+	userSvc contracts.UserBiz
 }
 
 // NewService 创建认证服务
-func NewService(userSvc contract.UserBiz) *Service {
+func NewService(userSvc contracts.UserBiz) *Service {
 	return &Service{userSvc: userSvc}
 }
 

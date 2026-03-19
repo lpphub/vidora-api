@@ -24,7 +24,7 @@
 
 ```bash
 mkdir -p cmd/server
-mkdir -p contract
+mkdir -p contracts
 ```
 
 - [ ] **Step 2: 移动 main.go 到 cmd/server**
@@ -58,7 +58,7 @@ Expected: 看到 `cmd/`, `contract/`, `infra/`, `module/`, `server/`, `pkg/`
 - [ ] **Step 1: 创建 contract/user.go**
 
 ```go
-// contract/user.go
+// contracts/user.go
 package contract
 
 import "context"
@@ -84,7 +84,7 @@ type UserDTO struct {
 - [ ] **Step 2: 创建 contract/category.go**
 
 ```go
-// contract/category.go
+// contracts/category.go
 package contract
 
 import "context"
@@ -105,7 +105,7 @@ type CategoryDTO struct {
 - [ ] **Step 3: 创建 contract/tag.go**
 
 ```go
-// contract/tag.go
+// contracts/tag.go
 package contract
 
 import "context"
@@ -130,7 +130,7 @@ type TagDTO struct {
 - [ ] **Step 4: 创建 contract/video.go**
 
 ```go
-// contract/video.go
+// contracts/video.go
 package contract
 
 import "context"
@@ -564,7 +564,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// 确保实现 contract.UserService 接口
+// 确保实现 contracts.UserService 接口
 var _ contract.UserService = (*Service)(nil)
 
 // Service 用户服务
@@ -950,7 +950,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// 确保实现 contract.CategoryService 接口
+// 确保实现 contracts.CategoryService 接口
 var _ contract.CategoryService = (*Service)(nil)
 
 // Service 分类服务
