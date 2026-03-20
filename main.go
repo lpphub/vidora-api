@@ -1,6 +1,8 @@
 package main
 
-import "vidora-api/server"
+import (
+	"vidora-api/app/server"
+)
 
 func main() {
 	app := server.New()

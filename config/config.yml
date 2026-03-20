@@ -3,12 +3,12 @@ database:
   port: 3306
   dbname: app_db
   user: test
-  password: D7p6ZkcJRMynPfCy
+  password: 123456
 
 redis:
   host: 1Panel-redis-dpZp
   port: 6379
-  password: 32wB6ejWwb78cPKT
+  password: 123456
   db: 0
 
 jwt:
